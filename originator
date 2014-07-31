@@ -58,5 +58,5 @@ determine_action() {
     fi
 }
 
-determine_action $1 $2
+determine_action "$@"
 
