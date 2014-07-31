@@ -1,14 +1,22 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 
-# Imports
+#################################################
+# Config
+#################################################
 . ./config/database_config.bash
+
+#################################################
+# Libs
+#################################################
 . ./lib/logger.bash
 . ./lib/mysql.bash
 
+#################################################
 # Creates a new migration
 #
 # @param $1: The name of the migration
+#################################################
 migrate_make() {
     if [[ -z "$1" ]]; then
         log_error "migrate:make requires a second parameter for the name of the migration."
@@ -26,22 +34,40 @@ migrate_make() {
     fi
 }
 
+#################################################
+# Rollback the last migration operation
+#################################################
 migrate_rollback() {
     echo "TODO Rollback The Last Migration Operation"
 }
 
+#################################################
+# Rollback all migrations
+#################################################
 migrate_reset() {
     echo "TODO Rollback all migrations"
 }
 
+#################################################
+# Rollback all migrations and run them all again
+#################################################
 migrate_refresh() {
     echo "TODO Rollback all migrations and run them all again"
 }
 
+#################################################
+# Runs all outstanding migrations
+#################################################
 migrate() {
     echo "TODO Running All Outstanding Migrations"
 }
 
+#################################################
+# Determines which action to take
+#
+# @param $1: The action to take
+# @param $2: Parameters to pass to the action
+#################################################
 determine_action() {
     if   [ "$1" = "migrate:make" ]; then
         migrate_make $2
@@ -58,5 +84,8 @@ determine_action() {
     fi
 }
 
+#################################################
+# Start
+#################################################
 determine_action "$@"
 
