@@ -13,8 +13,8 @@ migrate_make() {
         log_alert "Creating the migrate and revert files"
         epochTime=$(date +%s)
         
-        migrate=./migrations/migrate/"$epochTime"_migrate_$1.sql
-        revert=./migrations/revert/"$epochTime"_revert_$1.sql
+        migrate=./migrations/migrate/"$epochTime"_$1_migrate.sql
+        revert=./migrations/revert/"$epochTime"_$1_revert.sql
 
         touch "$migrate"
         log_success "Migrate file located at $migrate"
