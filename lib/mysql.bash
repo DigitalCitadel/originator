@@ -14,11 +14,9 @@ database_execute() {
 
 #################################################
 # Check if a database table exists
-#
-# @param $1: the table to check existence
 #################################################
 database_table_exists() {
-    var=$(database_execute "SHOW TABLES LIKE '$1'")
+    var=$(database_execute "SHOW TABLES LIKE '$MYSQL_DATABASE'")
     if [ "$var" = "" ]; then
         echo 0
     else
@@ -31,7 +29,7 @@ database_table_exists() {
 #################################################
 create_migrations_table() {
     read -d '' sql <<____EOF
-    CREATE TABLE $1
+    CREATE TABLE $MYSQL_DATABASE
     (
         id BIGINT NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (id),
@@ -44,3 +42,19 @@ ____EOF
 
     database_execute "${sql}"
 }
+
+
+#################################################
+# Creates a migration
+#
+# @param $1: The name of the migration
+#################################################
+create_migration() {
+    read -d '' sql <<____EOF
+    INSERT INTO $MYSQL_DATABASE
+    VALUES (DEFAULT, "$1", FALSE, FALSE);
+____EOF
+
+    database_execute "${sql}"
+}
+
