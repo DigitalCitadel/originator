@@ -20,9 +20,27 @@ database_execute() {
 database_table_exists() {
     var=$(database_execute "SHOW TABLES LIKE '$1'")
     if [ "$var" = "" ]; then
-        return 0
+        echo 0
     else
-        return 1
+        echo 1
     fi
 }
 
+#################################################
+# Creates the table to track migrations
+#################################################
+create_migrations_table() {
+    read -d '' sql <<____EOF
+    CREATE TABLE $1
+    (
+        id BIGINT NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (id),
+        name VARCHAR(64) NULL,
+        ran_last BOOLEAN NULL,
+        active BOOLEAN NULL
+    )
+    ENGINE=InnoDB;
+____EOF
+
+    database_execute "${sql}"
+}

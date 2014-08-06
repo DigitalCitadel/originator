@@ -84,8 +84,26 @@ determine_action() {
     fi
 }
 
+
+#################################################
+# Ensures that the database is set up
+#################################################
+ensure_setup() {
+    exists=$(database_table_exists $MYSQL_MIGRATION_TABLE)
+
+    # Table doesn't exist, create it
+    if [ $exists -eq 0 ]; then
+        # Creating Table
+        create_migrations_table $MYSQL_MIGRATION_TABLE
+
+        # Logging
+        log_alert "Created table $MYSQL_MIGRATION_TABLE"
+    fi
+}
+
 #################################################
 # Start
 #################################################
+ensure_setup
 determine_action "$@"
 

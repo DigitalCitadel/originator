@@ -4,6 +4,7 @@ ERROR_COLOR='\033[1;31m'
 SUCCESS_COLOR='\033[0;32m'
 NO_COLOR='\033[1;0m'
 ALERT_COLOR='\033[1;34m'
+APP_NAME='Originator'
 
 log() {
     echo $1
@@ -11,18 +12,18 @@ log() {
 
 log_error() {
     echo -ne "$ERROR_COLOR"
-    echo "<< ERROR >>: $1"
+    echo "<< $APP_NAME >>: $1"
     echo -ne "$NO_COLOR"
 }
 
 log_success() {
     echo -ne "$SUCCESS_COLOR"
-    echo "<< SUCCESS >>: $1"
+    echo "<< $APP_NAME >>: $1"
     echo -ne "$NO_COLOR"
 }
 
 log_alert() {
     echo -ne "$ALERT_COLOR"
-    echo "<< ALERT >>: $1"
+    echo "<< $APP_NAME >>: $1"
     echo -ne "$NO_COLOR"
 }
