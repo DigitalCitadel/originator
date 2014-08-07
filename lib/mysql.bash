@@ -1,5 +1,18 @@
 #!/bin/bash
 
+
+#################################################
+# Executes a sql file
+#
+# @param $1: the sql file to be executed
+#################################################
+database_file_execute() {
+    mysql   --user="$MYSQL_USER" \
+            --password="$MYSQL_PASS" \
+            --database="$MYSQL_DATABASE" \
+            < $1
+}
+
 #################################################
 # Executes a database statement
 #
@@ -13,10 +26,27 @@ database_execute() {
 }
 
 #################################################
+# Executes a database statement and 
+# gives the output
+#
+# @param $1: the statement to be executed
+#################################################
+database_fetch() {
+    mysql     --silent \
+              --skip-column-names \
+              --batch \
+              --user="$MYSQL_USER" \
+              --password="$MYSQL_PASS" \
+              --database="$MYSQL_DATABASE" \
+              --execute="$1"
+    echo $out
+}
+
+#################################################
 # Check if a database table exists
 #################################################
 database_table_exists() {
-    var=$(database_execute "SHOW TABLES LIKE '$MYSQL_DATABASE'")
+    var=$(database_execute "SHOW TABLES LIKE '$MYSQL_MIGRATION_TABLE'")
     if [ "$var" = "" ]; then
         echo 0
     else
@@ -29,7 +59,7 @@ database_table_exists() {
 #################################################
 create_migrations_table() {
     read -d '' sql <<____EOF
-    CREATE TABLE $MYSQL_DATABASE
+    CREATE TABLE $MYSQL_MIGRATION_TABLE
     (
         id BIGINT NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (id),
@@ -51,10 +81,24 @@ ____EOF
 #################################################
 create_migration() {
     read -d '' sql <<____EOF
-    INSERT INTO $MYSQL_DATABASE
+    INSERT INTO $MYSQL_MIGRATION_TABLE
     VALUES (DEFAULT, "$1", FALSE, FALSE);
 ____EOF
 
     database_execute "${sql}"
+}
+
+
+#################################################
+# Get's all outstanding migrations
+#################################################
+get_outstanding_migrations() {
+    read -d '' sql <<____EOF
+    SELECT id, name
+    FROM $MYSQL_MIGRATION_TABLE
+    WHERE active=0;
+____EOF
+
+    echo $(database_fetch "${sql}")
 }
 

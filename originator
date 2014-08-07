@@ -63,7 +63,47 @@ migrate_refresh() {
 # Runs all outstanding migrations
 #################################################
 migrate() {
-    echo "TODO Running All Outstanding Migrations"
+    migrations=$(get_outstanding_migrations)
+
+    # TODO if there are migrations, set all ran_last to false
+
+    for column in $migrations
+    do
+        # id column
+        if [ "$id" == "" ]; then
+            id=$column
+            continue
+        fi
+
+        # name column
+        if [ "$name" == "" ]; then
+           name=$column 
+        fi
+
+        # Handling
+        handle_single_migration $id $name
+
+        # Clearing 
+        id=""
+        name=""
+    done
+}
+
+
+#################################################
+# Runs a single migration
+#
+# @param $1: The id of the migration
+# @param $2: The name of the migration
+#################################################
+handle_single_migration() {
+    # Migrating the file
+    migration_file=./migrations/migrate/"$name"_migrate.sql
+    database_file_execute $migration_file
+
+    # TODO log that we ran this migration
+
+    # TODO update the database as active + last migration
 }
 
 #################################################
