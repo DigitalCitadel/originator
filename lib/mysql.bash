@@ -1,10 +1,10 @@
 #!/bin/bash
 
-
 #################################################
 # Executes a sql file
 #
 # @param $1: the sql file to be executed
+# @visibility: Public
 #################################################
 database_file_execute() {
     mysql   --user="$MYSQL_USER" \
@@ -17,6 +17,7 @@ database_file_execute() {
 # Executes a database statement
 #
 # @param $1: the statement to be executed
+# @visibility: Private
 #################################################
 database_execute() {
     mysql   --user="$MYSQL_USER" \
@@ -30,6 +31,7 @@ database_execute() {
 # gives the output
 #
 # @param $1: the statement to be executed
+# @visibility: Private
 #################################################
 database_fetch() {
     mysql     --silent \
@@ -44,6 +46,8 @@ database_fetch() {
 
 #################################################
 # Check if a database table exists
+#
+# @visibility: Public
 #################################################
 database_table_exists() {
     var=$(database_execute "SHOW TABLES LIKE '$MYSQL_MIGRATION_TABLE'")
@@ -56,6 +60,8 @@ database_table_exists() {
 
 #################################################
 # Creates the table to track migrations
+#
+# @visibility: Public
 #################################################
 create_migrations_table() {
     read -d '' sql <<____EOF
@@ -78,6 +84,7 @@ ____EOF
 # Creates a migration
 #
 # @param $1: The name of the migration
+# @visibility: Public
 #################################################
 create_migration() {
     read -d '' sql <<____EOF
@@ -91,6 +98,8 @@ ____EOF
 
 #################################################
 # Get's all outstanding migrations
+#
+# @visibility: Public 
 #################################################
 get_outstanding_migrations() {
     read -d '' sql <<____EOF
