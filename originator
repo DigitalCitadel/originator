@@ -103,9 +103,11 @@ handle_single_migration() {
     migration_file=./migrations/migrate/"$2"_migrate.sql
     database_file_execute $migration_file
 
-    # TODO log that we ran this migration
+    # Updating the log that we've ran this
+    set_ran $1
 
-    # TODO update the database as active + last migration
+    # Logging our success
+    log_success "Migration located at $migration_file has successfully executed"
 }
 
 #################################################

@@ -119,8 +119,25 @@ ____EOF
 #################################################
 reset_ran_last() {
     read -d '' sql <<____EOF
-        update $MYSQL_MIGRATION_TABLE
+        UPDATE $MYSQL_MIGRATION_TABLE
         SET ran_last=0;
+____EOF
+
+    database_execute "${sql}"
+}
+
+
+#################################################
+# Sets the migration with the id's
+# ran_last to true, and active to true.
+#
+# @param $1: The id of the migration
+#################################################
+set_ran() {
+    read -d '' sql <<____EOF
+        UPDATE $MYSQL_MIGRATION_TABLE
+        SET ran_last=0, active=0
+        WHERE id=$1;
 ____EOF
 
     database_execute "${sql}"
