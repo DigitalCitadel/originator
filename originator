@@ -139,7 +139,6 @@ migrate() {
     fi
 }
 
-
 #################################################
 # Runs a single migration
 #
@@ -163,8 +162,10 @@ handle_single_migration() {
 # Rollback all migrations and run them all again
 #################################################
 migrate_refresh() {
+    log_alert "Refreshing all migrations"
     migrate_reset
     migrate
+    log_success "All migrations have been refreshed"
 }
 
 #################################################
@@ -188,7 +189,6 @@ determine_action() {
         log_error "Action invalid"
     fi
 }
-
 
 #################################################
 # Ensures that the database is set up
