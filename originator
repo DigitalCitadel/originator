@@ -65,30 +65,37 @@ migrate_refresh() {
 migrate() {
     migrations=$(get_outstanding_migrations)
 
-    # Setting all migrations ran_last to false
-    reset_ran_last
+    # Verifying that we have a migration to run
+    words=( $migrations )
+    if [ ${#words[@]} -ne 0 ]; then
 
-    # Going through all outstanding migrations
-    for column in $migrations
-    do
-        # id column
-        if [ "$id" == "" ]; then
-            id=$column
-            continue
-        fi
+        # Setting all migrations ran_last to false
+        reset_ran_last
 
-        # name column
-        if [ "$name" == "" ]; then
-           name=$column 
-        fi
+        # Going through all outstanding migrations
+        for column in $migrations
+        do
+            # id column
+            if [ "$id" == "" ]; then
+                id=$column
+                continue
+            fi
 
-        # Handling
-        handle_single_migration $id $name
+            # name column
+            if [ "$name" == "" ]; then
+               name=$column
+            fi
 
-        # Clearing 
-        id=""
-        name=""
-    done
+            # Handling
+            handle_single_migration $id $name
+
+            # Clearing
+            id=""
+            name=""
+        done
+    else
+        log_alert "There were no migrations to run"
+    fi
 }
 
 
