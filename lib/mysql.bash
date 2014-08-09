@@ -111,3 +111,18 @@ ____EOF
     echo $(database_fetch "${sql}")
 }
 
+
+#################################################
+# Sets all migrations ran_last to false
+#
+# @visibility: Public
+#################################################
+reset_ran_last() {
+    read -d '' sql <<____EOF
+        update $MYSQL_MIGRATION_TABLE
+        SET ran_last=0;
+____EOF
+
+    database_execute "${sql}"
+}
+

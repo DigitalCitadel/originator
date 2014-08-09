@@ -65,8 +65,10 @@ migrate_refresh() {
 migrate() {
     migrations=$(get_outstanding_migrations)
 
-    # TODO if there are migrations, set all ran_last to false
+    # Setting all migrations ran_last to false
+    reset_ran_last
 
+    # Going through all outstanding migrations
     for column in $migrations
     do
         # id column
@@ -98,7 +100,7 @@ migrate() {
 #################################################
 handle_single_migration() {
     # Migrating the file
-    migration_file=./migrations/migrate/"$name"_migrate.sql
+    migration_file=./migrations/migrate/"$2"_migrate.sql
     database_file_execute $migration_file
 
     # TODO log that we ran this migration
