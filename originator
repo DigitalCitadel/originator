@@ -101,13 +101,6 @@ migrate_reset() {
 }
 
 #################################################
-# Rollback all migrations and run them all again
-#################################################
-migrate_refresh() {
-    echo "TODO Rollback all migrations and run them all again"
-}
-
-#################################################
 # Runs all outstanding migrations
 #################################################
 migrate() {
@@ -164,6 +157,14 @@ handle_single_migration() {
 
     # Logging our success
     log_success "Migration located at $migration_file has successfully executed"
+}
+
+#################################################
+# Rollback all migrations and run them all again
+#################################################
+migrate_refresh() {
+    migrate_reset
+    migrate
 }
 
 #################################################
