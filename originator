@@ -111,7 +111,12 @@ handle_single_revert() {
 # Rollback all migrations
 #################################################
 migrate_reset() {
-    echo "TODO Rollback all migrations"
+    # Fetching Migrations
+    migrations=$(get_active_migrations)
+    error="There were no migrations to revert"
+
+    # Rolling back the migrations
+    handle_multiple_revert "$migrations" "$error"
 }
 
 #################################################
@@ -178,8 +183,9 @@ handle_single_migration() {
 migrate_refresh() {
     log_alert "Refreshing all migrations"
     migrate_reset
+    log_alert "========="
     migrate
-    log_success "All migrations have been refreshed"
+    log_alert "All migrations have been refreshed"
 }
 
 #################################################
