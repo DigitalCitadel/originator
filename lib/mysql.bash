@@ -79,7 +79,6 @@ ____EOF
     database_execute "${sql}"
 }
 
-
 #################################################
 # Creates a migration
 #
@@ -95,23 +94,6 @@ ____EOF
     database_execute "${sql}"
 }
 
-
-#################################################
-# Get's all outstanding migrations
-#
-# @visibility: Public 
-#################################################
-get_outstanding_migrations() {
-    read -d '' sql <<____EOF
-    SELECT id, name
-    FROM $MYSQL_MIGRATION_TABLE
-    WHERE active=0;
-____EOF
-
-    echo $(database_fetch "${sql}")
-}
-
-
 #################################################
 # Sets all migrations ran_last to false
 #
@@ -125,7 +107,6 @@ ____EOF
 
     database_execute "${sql}"
 }
-
 
 #################################################
 # Sets the migration with the id=$1
@@ -173,6 +154,36 @@ get_last_ran() {
     SELECT id, name
     FROM $MYSQL_MIGRATION_TABLE
     WHERE ran_last=1;
+____EOF
+
+    echo $(database_fetch "${sql}")
+}
+
+#################################################
+# Get's all outstanding migrations
+#
+# @visibility: Public
+#################################################
+get_outstanding_migrations() {
+    read -d '' sql <<____EOF
+    SELECT id, name
+    FROM $MYSQL_MIGRATION_TABLE
+    WHERE active=0;
+____EOF
+
+    echo $(database_fetch "${sql}")
+}
+
+#################################################
+# Get's all active migrations
+#
+# @visibility: Public
+#################################################
+get_active_migrations() {
+    read -d '' sql <<____EOF
+    SELECT id, name
+    FROM $MYSQL_MIGRATION_TABLE
+    WHERE active=1;
 ____EOF
 
     echo $(database_fetch "${sql}")
