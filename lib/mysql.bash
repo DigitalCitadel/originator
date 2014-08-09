@@ -136,7 +136,7 @@ ____EOF
 set_ran() {
     read -d '' sql <<____EOF
         UPDATE $MYSQL_MIGRATION_TABLE
-        SET ran_last=0, active=0
+        SET ran_last=1, active=1
         WHERE id=$1;
 ____EOF
 
