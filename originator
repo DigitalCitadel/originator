@@ -42,14 +42,28 @@ migrate_make() {
 # Rollback the last migration operation
 #################################################
 migrate_rollback() {
+    # Fetching Migrations
     migrations=$(get_last_ran)
+    error="The last set of migrations were already rolled back"
 
+    # Rolling back the migrations
+    handle_multiple_revert "$migrations" "$error"
+}
+
+#################################################
+# Performs a revert on multiple migrations
+#
+# @param $1: The migrations list
+# @param $2: The error message to display if
+#            there is nothing to migrate
+#################################################
+handle_multiple_revert() {
     # Verifying that we have a migration to run
-    words=( $migrations )
+    words=( $1 )
     if [ ${#words[@]} -ne 0 ]; then
 
         # Going through all outstanding migrations
-        for column in $migrations
+        for column in $1
         do
             # id column
             if [ "$id" == "" ]; then
@@ -63,24 +77,24 @@ migrate_rollback() {
             fi
 
             # Handling
-            handle_single_rollback $id $name
+            handle_single_revert $id $name
 
             # Clearing
             id=""
             name=""
         done
     else
-        log_alert "The last set of migrations were already rolled back"
+        log_alert "$2"
     fi
 }
 
 #################################################
-# Performs a rollback on a single migration
+# Performs a revert on a single migration
 #
 # @param $1: The id of the migration
 # @param $2: The name of the migration
 #################################################
-handle_single_rollback() {
+handle_single_revert() {
     # Reverting the file
     revert_file=./migrations/revert/"$2"_revert.sql
     database_file_execute $revert_file
