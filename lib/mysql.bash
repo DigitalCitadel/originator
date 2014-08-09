@@ -128,18 +128,53 @@ ____EOF
 
 
 #################################################
-# Sets the migration with the id's
-# ran_last to true, and active to true.
+# Sets the migration with the id=$1
+# ran_last to $2
 #
 # @param $1: The id of the migration
+# @param $2: What to set ran_last to
+# @visibility: Public
 #################################################
-set_ran() {
+set_ran_last() {
     read -d '' sql <<____EOF
         UPDATE $MYSQL_MIGRATION_TABLE
-        SET ran_last=1, active=1
+        SET ran_last=$2
         WHERE id=$1;
 ____EOF
 
     database_execute "${sql}"
+}
+
+#################################################
+# Sets the migration with the id=$1
+# active to $2
+#
+# @param $1: The id of the migration
+# @param $2: What to set active to
+# @visibility: Public
+#################################################
+set_active() {
+    read -d '' sql <<____EOF
+        UPDATE $MYSQL_MIGRATION_TABLE
+        SET active=$2
+        WHERE id=$1;
+____EOF
+
+    database_execute "${sql}"
+}
+
+#################################################
+# Get's all migrations that were ran last
+#
+# @visibility: Public
+#################################################
+get_last_ran() {
+    read -d '' sql <<____EOF
+    SELECT id, name
+    FROM $MYSQL_MIGRATION_TABLE
+    WHERE ran_last=1;
+____EOF
+
+    echo $(database_fetch "${sql}")
 }
 

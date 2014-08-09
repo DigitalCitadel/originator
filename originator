@@ -42,7 +42,55 @@ migrate_make() {
 # Rollback the last migration operation
 #################################################
 migrate_rollback() {
-    echo "TODO Rollback The Last Migration Operation"
+    migrations=$(get_last_ran)
+
+    # Verifying that we have a migration to run
+    words=( $migrations )
+    if [ ${#words[@]} -ne 0 ]; then
+
+        # Going through all outstanding migrations
+        for column in $migrations
+        do
+            # id column
+            if [ "$id" == "" ]; then
+                id=$column
+                continue
+            fi
+
+            # name column
+            if [ "$name" == "" ]; then
+               name=$column
+            fi
+
+            # Handling
+            handle_single_rollback $id $name
+
+            # Clearing
+            id=""
+            name=""
+        done
+    else
+        log_alert "The last set of migrations were already rolled back"
+    fi
+}
+
+#################################################
+# Performs a rollback on a single migration
+#
+# @param $1: The id of the migration
+# @param $2: The name of the migration
+#################################################
+handle_single_rollback() {
+    # Reverting the file
+    revert_file=./migrations/revert/"$2"_revert.sql
+    database_file_execute $revert_file
+
+    # Updating the database that we haven't ran this
+    set_ran_last $1 0
+    set_active $1 0
+
+    # Logging our success
+    log_success "Migration $2 has successfully been reveted"
 }
 
 #################################################
@@ -110,8 +158,9 @@ handle_single_migration() {
     migration_file=./migrations/migrate/"$2"_migrate.sql
     database_file_execute $migration_file
 
-    # Updating the log that we've ran this
-    set_ran $1
+    # Updating the database that we've ran this
+    set_ran_last $1 1
+    set_active $1 1
 
     # Logging our success
     log_success "Migration located at $migration_file has successfully executed"
