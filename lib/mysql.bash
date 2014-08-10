@@ -153,7 +153,8 @@ get_last_ran() {
     read -d '' sql <<____EOF
     SELECT id, name
     FROM $MYSQL_MIGRATION_TABLE
-    WHERE ran_last=1;
+    WHERE ran_last=1
+    ORDER BY name ASC;
 ____EOF
 
     echo $(database_fetch "${sql}")
@@ -168,7 +169,8 @@ get_outstanding_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
     FROM $MYSQL_MIGRATION_TABLE
-    WHERE active=0;
+    WHERE active=0
+    ORDER BY name ASC;
 ____EOF
 
     echo $(database_fetch "${sql}")
@@ -183,7 +185,25 @@ get_active_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
     FROM $MYSQL_MIGRATION_TABLE
-    WHERE active=1;
+    WHERE active=1
+    ORDER BY name ASC;
+____EOF
+
+    echo $(database_fetch "${sql}")
+}
+
+
+#################################################
+# Returns a migration from it's name
+#
+# @param $1: The name of the migration
+# @visibility: Public
+#################################################
+get_migration_from_name() {
+    read -d '' sql <<____EOF
+    SELECT *
+    FROM $MYSQL_MIGRATION_TABLE
+    WHERE name="$1";
 ____EOF
 
     echo $(database_fetch "${sql}")

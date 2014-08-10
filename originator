@@ -189,13 +189,43 @@ migrate_refresh() {
 }
 
 #################################################
+# Runs through all of the migration files and
+# puts the ones that aren't being tracked in the
+# database.
+#################################################
+migrate_update() {
+    migrations_files="migrations/migrate/*.sql"
+    for file in $migrations_files
+    do
+        # Getting the migration name
+        file_basename=$(basename $file)
+        migration_name=$(echo $file_basename | sed 's/\_migrate.sql//')
+
+        # Getting the result from the database
+        migration=$(get_migration_from_name $migration_name)
+
+        # Checking if it already exists
+        words=( $migration )
+        if [ ${#words[@]} -eq 0 ]
+        then
+            create_migration $migration_name
+            log_success "Migration $migration_name is now being watched"
+        fi
+    done
+}
+
+#################################################
 # Determines which action to take
 #
 # @param $1: The action to take
 # @param $2: Parameters to pass to the action
 #################################################
 determine_action() {
-    if   [ "$1" = "migrate:make" ]; then
+    if   [ "$1" = "migrate" ]; then
+        migrate
+    elif [ "$1" = "migrate:update" ]; then
+        migrate_update
+    elif [ "$1" = "migrate:make" ]; then
         migrate_make $2
     elif [ "$1" = "migrate:rollback" ]; then
         migrate_rollback
@@ -203,8 +233,6 @@ determine_action() {
         migrate_reset
     elif [ "$1" = "migrate:refresh" ]; then
         migrate_refresh
-    elif [ "$1" = "migrate" ]; then
-        migrate
     else
         log_error "Action invalid"
     fi
