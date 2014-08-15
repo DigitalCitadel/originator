@@ -5,6 +5,7 @@ cd "$(dirname "$0")"
 # Config
 #################################################
 . ./config/database_config.bash
+. ./config/originator_config.bash
 
 #################################################
 # Libs
@@ -257,6 +258,19 @@ ensure_setup() {
 #################################################
 # Start
 #################################################
+if [ $APP_IN_PRODUCTION -eq 1 ]
+then
+    log_error "Warning, this application is in production."
+    log_alert "Are you sure you want to continue?  (Y/n)"
+
+    read input
+    input=$(echo $input | awk '{print tolower($0)}')
+    if [ "$input" != "y" ] && [ "$input" != "yes" ]; then
+        log_alert "Exiting"
+        exit
+    fi
+fi
+
 ensure_setup
 determine_action "$@"
 
