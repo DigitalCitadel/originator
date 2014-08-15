@@ -4,12 +4,11 @@
 # Config
 #################################################
 . ./config/database_config.bash
-. ./config/originator_config.bash
+. ./config/migrate_config.bash
 
 #################################################
 # Libs
 #################################################
-. ./lib/logger.bash
 . ./lib/mysql.bash
 . ./lib/migrate.bash
 
@@ -17,7 +16,7 @@
 # Start
 #################################################
 # Checking that we're not in production
-if [ $APP_IN_PRODUCTION -eq 1 ]; then
+if [ $Migrate__app_in_production -eq 1 ]; then
     Logger__error "Warning, this application is in production."
     Logger__prompt "Continue?  (Y/n): "
 
@@ -33,7 +32,7 @@ fi
 ensure_setup
 
 # Checking if we should always update
-if [ $ALWAYS_UPDATE -eq 1 ]; then
+if [ $Migrate__always_update -eq 1 ]; then
     migrate_update
 fi
 

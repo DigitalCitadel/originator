@@ -12,7 +12,7 @@
 # you would probably want to have disabled, and
 # manage any updates manually.
 #################################################
-ALWAYS_UPDATE=0
+Migrate__always_update=0
 
 #################################################
 # Having this flag enabled will worn you each
@@ -23,5 +23,5 @@ ALWAYS_UPDATE=0
 # recommended to enable if your application 
 # is actually in production.
 #################################################
-APP_IN_PRODUCTION=1
+Migrate__app_in_production=1
 
