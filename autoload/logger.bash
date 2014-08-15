@@ -7,7 +7,7 @@ LOGGER__alert_color='\033[1;34m'
 LOGGER__prefix='Originator'
 
 Logger__log() {
-    echo $1
+    echo "<< $LOGGER__prefix >>: $1"
 }
 
 Logger__error() {
@@ -26,5 +26,9 @@ Logger__alert() {
     echo -ne "$LOGGER__alert_color"
     echo "<< $LOGGER__prefix >>: $1"
     echo -ne "$LOGGER__no_color"
+}
+
+Logger__prompt() {
+    echo -n "<< $LOGGER__prefix >>: $1"
 }
 

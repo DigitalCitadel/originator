@@ -18,13 +18,13 @@
 #################################################
 # Checking that we're not in production
 if [ $APP_IN_PRODUCTION -eq 1 ]; then
-    log_error "Warning, this application is in production."
-    log_alert "Are you sure you want to continue?  (Y/n)"
+    Logger__error "Warning, this application is in production."
+    Logger__prompt "Continue?  (Y/n): "
 
     read input
     input=$(echo $input | awk '{print tolower($0)}')
     if [ "$input" != "y" ] && [ "$input" != "yes" ]; then
-        log_alert "Exiting"
+        Logger__alert "Exiting"
         exit
     fi
 fi
