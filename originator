@@ -20,9 +20,18 @@ Originator__dispatch() {
     done
 }
 
+#################################################
+# Loads all of the autoload files
+#################################################
+Originator__autoload() {
+    for file in "autoload/*"; do
+        . $file
+    done
+}
 
 #################################################
 # Start
 #################################################
+Originator__autoload
 Originator__dispatch "$@"
 
