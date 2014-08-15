@@ -7,7 +7,7 @@
 #################################################
 migrate_make() {
     if [[ -z "$1" ]]; then
-        log_error "migrate:make requires a second parameter for the name of the migration."
+        Logger__error "migrate:make requires a second parameter for the name of the migration."
     else
         epoch_time=$(date +%s)
         migration_name="$epoch_time"_"$1"
@@ -17,9 +17,9 @@ migrate_make() {
 
         # Creating migration files
         touch "$migrate"
-        log_success "Migrate file located at $migrate"
+        Logger__success "Migrate file located at $migrate"
         touch "$revert" 
-        log_success "Revert file located at $revert"
+        Logger__success "Revert file located at $revert"
 
         # Creating migration in the database
         create_migration $migration_name
@@ -72,7 +72,7 @@ handle_multiple_revert() {
             name=""
         done
     else
-        log_alert "$2"
+        Logger__alert "$2"
     fi
 }
 
@@ -92,7 +92,7 @@ handle_single_revert() {
     set_active $1 0
 
     # Logging our success
-    log_success "Migration $2 has successfully been reveted"
+    Logger__success "Migration $2 has successfully been reveted"
 }
 
 #################################################
@@ -142,7 +142,7 @@ migrate() {
             name=""
         done
     else
-        log_alert "There were no migrations to run"
+        Logger__alert "There were no migrations to run"
     fi
 }
 
@@ -162,18 +162,18 @@ handle_single_migration() {
     set_active $1 1
 
     # Logging our success
-    log_success "Migration located at $migration_file has successfully executed"
+    Logger__success "Migration located at $migration_file has successfully executed"
 }
 
 #################################################
 # Rollback all migrations and run them all again
 #################################################
 migrate_refresh() {
-    log_alert "Refreshing all migrations"
+    Logger__alert "Refreshing all migrations"
     migrate_reset
-    log_alert "========="
+    Logger__alert "========="
     migrate
-    log_alert "All migrations have been refreshed"
+    Logger__alert "All migrations have been refreshed"
 }
 
 #################################################
@@ -197,7 +197,7 @@ migrate_update() {
         if [ ${#words[@]} -eq 0 ]
         then
             create_migration $migration_name
-            log_success "Migration $migration_name is now being watched"
+            Logger__success "Migration $migration_name is now being watched"
         fi
     done
 }
@@ -222,7 +222,7 @@ determine_action() {
     elif [ "$1" = "migrate:refresh" ]; then
         migrate_refresh
     else
-        log_error "Action invalid"
+        Logger__error "Action invalid"
     fi
 }
 
@@ -238,6 +238,7 @@ ensure_setup() {
         create_migrations_table
 
         # Logging
-        log_alert "Created table $MYSQL_MIGRATION_TABLE"
+        Logger__alert "Created table $(database_migration_table)"
     fi
 }
+

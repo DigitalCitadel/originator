@@ -7,9 +7,9 @@
 # @visibility: Public
 #################################################
 database_file_execute() {
-    mysql   --user="$MYSQL_USER" \
-            --password="$MYSQL_PASS" \
-            --database="$MYSQL_DATABASE" \
+    mysql   --user="$Database__mysql_user" \
+            --password="$Database__mysql_pass" \
+            --database="$Database__mysql_database" \
             < $1
 }
 
@@ -20,9 +20,9 @@ database_file_execute() {
 # @visibility: Private
 #################################################
 database_execute() {
-    mysql   --user="$MYSQL_USER" \
-            --password="$MYSQL_PASS" \
-            --database="$MYSQL_DATABASE" \
+    mysql   --user="$Database__mysql_user" \
+            --password="$Database__mysql_pass" \
+            --database="$Database__mysql_database" \
             --execute="$1"
 }
 
@@ -34,13 +34,13 @@ database_execute() {
 # @visibility: Private
 #################################################
 database_fetch() {
-    mysql     --silent \
-              --skip-column-names \
-              --batch \
-              --user="$MYSQL_USER" \
-              --password="$MYSQL_PASS" \
-              --database="$MYSQL_DATABASE" \
-              --execute="$1"
+    mysql   --silent \
+            --skip-column-names \
+            --batch \
+            --user="$Database__mysql_user" \
+            --password="$Database__mysql_pass" \
+            --database="$Database__mysql_database" \
+            --execute="$1"
     echo $out
 }
 
@@ -50,12 +50,20 @@ database_fetch() {
 # @visibility: Public
 #################################################
 database_table_exists() {
-    var=$(database_execute "SHOW TABLES LIKE '$MYSQL_MIGRATION_TABLE'")
+    var=$(database_execute "SHOW TABLES LIKE '$Database__mysql_migration_table'")
     if [ "$var" = "" ]; then
         echo 0
     else
         echo 1
     fi
+}
+
+#################################################
+# Returns the database table we're using for
+# migrations.
+#################################################
+database_migration_table() {
+    echo "$Database__mysql_migration_table"
 }
 
 #################################################
@@ -65,7 +73,7 @@ database_table_exists() {
 #################################################
 create_migrations_table() {
     read -d '' sql <<____EOF
-    CREATE TABLE $MYSQL_MIGRATION_TABLE
+    CREATE TABLE $Database__mysql_migration_table
     (
         id BIGINT NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (id),
@@ -87,7 +95,7 @@ ____EOF
 #################################################
 create_migration() {
     read -d '' sql <<____EOF
-    INSERT INTO $MYSQL_MIGRATION_TABLE
+    INSERT INTO $Database__mysql_migration_table
     VALUES (DEFAULT, "$1", FALSE, FALSE);
 ____EOF
 
@@ -101,7 +109,7 @@ ____EOF
 #################################################
 reset_ran_last() {
     read -d '' sql <<____EOF
-        UPDATE $MYSQL_MIGRATION_TABLE
+        UPDATE $Database__mysql_migration_table
         SET ran_last=0;
 ____EOF
 
@@ -118,7 +126,7 @@ ____EOF
 #################################################
 set_ran_last() {
     read -d '' sql <<____EOF
-        UPDATE $MYSQL_MIGRATION_TABLE
+        UPDATE $Database__mysql_migration_table
         SET ran_last=$2
         WHERE id=$1;
 ____EOF
@@ -136,7 +144,7 @@ ____EOF
 #################################################
 set_active() {
     read -d '' sql <<____EOF
-        UPDATE $MYSQL_MIGRATION_TABLE
+        UPDATE $Database__mysql_migration_table
         SET active=$2
         WHERE id=$1;
 ____EOF
@@ -152,7 +160,7 @@ ____EOF
 get_last_ran() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $MYSQL_MIGRATION_TABLE
+    FROM $Database__mysql_migration_table
     WHERE ran_last=1
     ORDER BY name ASC;
 ____EOF
@@ -168,7 +176,7 @@ ____EOF
 get_outstanding_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $MYSQL_MIGRATION_TABLE
+    FROM $Database__mysql_migration_table
     WHERE active=0
     ORDER BY name ASC;
 ____EOF
@@ -184,7 +192,7 @@ ____EOF
 get_active_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $MYSQL_MIGRATION_TABLE
+    FROM $Database__mysql_migration_table
     WHERE active=1
     ORDER BY name ASC;
 ____EOF
@@ -202,7 +210,7 @@ ____EOF
 get_migration_from_name() {
     read -d '' sql <<____EOF
     SELECT *
-    FROM $MYSQL_MIGRATION_TABLE
+    FROM $Database__mysql_migration_table
     WHERE name="$1";
 ____EOF
 
