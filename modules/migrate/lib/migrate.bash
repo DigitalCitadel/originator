@@ -5,7 +5,7 @@
 #
 # @param $1: The name of the migration
 #################################################
-migrate_make() {
+Migrate__make() {
     if [[ -z "$1" ]]; then
         Logger__error "migrate:make requires a second parameter for the name of the migration."
     else
@@ -29,13 +29,13 @@ migrate_make() {
 #################################################
 # Rollback the last migration operation
 #################################################
-migrate_rollback() {
+Migrate__rollback() {
     # Fetching Migrations
     migrations=$(Database__get_last_ran)
     error="The last set of migrations were already rolled back"
 
     # Rolling back the migrations
-    handle_multiple_revert "$migrations" "$error"
+    Migrate_handle_multiple_revert "$migrations" "$error"
 }
 
 #################################################
@@ -45,7 +45,7 @@ migrate_rollback() {
 # @param $2: The error message to display if
 #            there is nothing to migrate
 #################################################
-handle_multiple_revert() {
+Migrate_handle_multiple_revert() {
     # Verifying that we have a migration to run
     words=( $1 )
     if [ ${#words[@]} -ne 0 ]; then
@@ -65,7 +65,7 @@ handle_multiple_revert() {
             fi
 
             # Handling
-            handle_single_revert $id $name
+            Migrate_handle_single_revert $id $name
 
             # Clearing
             id=""
@@ -82,7 +82,7 @@ handle_multiple_revert() {
 # @param $1: The id of the migration
 # @param $2: The name of the migration
 #################################################
-handle_single_revert() {
+Migrate_handle_single_revert() {
     # Reverting the file
     revert_file=./migrations/revert/"$2"_revert.sql
     Database__file_execute $revert_file
@@ -92,25 +92,25 @@ handle_single_revert() {
     Database__set_active $1 0
 
     # Logging our success
-    Logger__success "Migration $2 has successfully been reveted"
+    Logger__success "Migration $2 has successfully been reverted"
 }
 
 #################################################
 # Rollback all migrations
 #################################################
-migrate_reset() {
+Migrate__reset() {
     # Fetching Migrations
     migrations=$(Database__get_active_migrations)
     error="There were no migrations to revert"
 
     # Rolling back the migrations
-    handle_multiple_revert "$migrations" "$error"
+    Migrate_handle_multiple_revert "$migrations" "$error"
 }
 
 #################################################
 # Runs all outstanding migrations
 #################################################
-migrate() {
+Migrate__index() {
     migrations=$(Database__get_outstanding_migrations)
 
     # Verifying that we have a migration to run
@@ -135,7 +135,7 @@ migrate() {
             fi
 
             # Handling
-            handle_single_migration $id $name
+            Migrate_handle_single_migration $id $name
 
             # Clearing
             id=""
@@ -152,7 +152,7 @@ migrate() {
 # @param $1: The id of the migration
 # @param $2: The name of the migration
 #################################################
-handle_single_migration() {
+Migrate_handle_single_migration() {
     # Migrating the file
     migration_file=./migrations/migrate/"$2"_migrate.sql
     Database__file_execute $migration_file
@@ -162,17 +162,17 @@ handle_single_migration() {
     Database__set_active $1 1
 
     # Logging our success
-    Logger__success "Migration located at $migration_file has successfully executed"
+    Logger__success "Migration $2 has successfully been executed"
 }
 
 #################################################
 # Rollback all migrations and run them all again
 #################################################
-migrate_refresh() {
+Migrate__refresh() {
     Logger__alert "Refreshing all migrations"
-    migrate_reset
+    Migrate__reset
     Logger__alert "========="
-    migrate
+    Migrate__index
     Logger__alert "All migrations have been refreshed"
 }
 
@@ -181,7 +181,7 @@ migrate_refresh() {
 # puts the ones that aren't being tracked in the
 # database.
 #################################################
-migrate_update() {
+Migrate__update() {
     migrations_files="migrations/migrate/*.sql"
     for file in $migrations_files
     do
@@ -203,33 +203,9 @@ migrate_update() {
 }
 
 #################################################
-# Determines which action to take
-#
-# @param $1: The action to take
-# @param $2: Parameters to pass to the action
-#################################################
-determine_action() {
-    if   [ "$1" = "migrate" ]; then
-        migrate
-    elif [ "$1" = "migrate:update" ]; then
-        migrate_update
-    elif [ "$1" = "migrate:make" ]; then
-        migrate_make $2
-    elif [ "$1" = "migrate:rollback" ]; then
-        migrate_rollback
-    elif [ "$1" = "migrate:reset" ]; then
-        migrate_reset
-    elif [ "$1" = "migrate:refresh" ]; then
-        migrate_refresh
-    else
-        Logger__error "Action invalid"
-    fi
-}
-
-#################################################
 # Ensures that the database is set up
 #################################################
-ensure_setup() {
+Migrate__ensure_setup() {
     exists=$(Database__table_exists)
 
     # Table doesn't exist, create it
