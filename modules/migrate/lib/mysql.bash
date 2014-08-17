@@ -4,9 +4,8 @@
 # Executes a sql file
 #
 # @param $1: the sql file to be executed
-# @visibility: Public
 #################################################
-database_file_execute() {
+Database__file_execute() {
     mysql   --user="$Database__mysql_user" \
             --password="$Database__mysql_pass" \
             --database="$Database__mysql_database" \
@@ -17,9 +16,8 @@ database_file_execute() {
 # Executes a database statement
 #
 # @param $1: the statement to be executed
-# @visibility: Private
 #################################################
-database_execute() {
+Database_execute() {
     mysql   --user="$Database__mysql_user" \
             --password="$Database__mysql_pass" \
             --database="$Database__mysql_database" \
@@ -31,9 +29,8 @@ database_execute() {
 # gives the output
 #
 # @param $1: the statement to be executed
-# @visibility: Private
 #################################################
-database_fetch() {
+Database_fetch() {
     mysql   --silent \
             --skip-column-names \
             --batch \
@@ -46,11 +43,9 @@ database_fetch() {
 
 #################################################
 # Check if a database table exists
-#
-# @visibility: Public
 #################################################
-database_table_exists() {
-    var=$(database_execute "SHOW TABLES LIKE '$Database__mysql_migration_table'")
+Database__table_exists() {
+    var=$(Database_execute "SHOW TABLES LIKE '$Database__mysql_migration_table'")
     if [ "$var" = "" ]; then
         echo 0
     else
@@ -62,16 +57,14 @@ database_table_exists() {
 # Returns the database table we're using for
 # migrations.
 #################################################
-database_migration_table() {
+Database__migration_table() {
     echo "$Database__mysql_migration_table"
 }
 
 #################################################
 # Creates the table to track migrations
-#
-# @visibility: Public
 #################################################
-create_migrations_table() {
+Database__create_migrations_table() {
     read -d '' sql <<____EOF
     CREATE TABLE $Database__mysql_migration_table
     (
@@ -84,36 +77,33 @@ create_migrations_table() {
     ENGINE=InnoDB;
 ____EOF
 
-    database_execute "${sql}"
+    Database_execute "${sql}"
 }
 
 #################################################
 # Creates a migration
 #
 # @param $1: The name of the migration
-# @visibility: Public
 #################################################
-create_migration() {
+Database__create_migration() {
     read -d '' sql <<____EOF
     INSERT INTO $Database__mysql_migration_table
     VALUES (DEFAULT, "$1", FALSE, FALSE);
 ____EOF
 
-    database_execute "${sql}"
+    Database_execute "${sql}"
 }
 
 #################################################
 # Sets all migrations ran_last to false
-#
-# @visibility: Public
 #################################################
-reset_ran_last() {
+Database__reset_ran_last() {
     read -d '' sql <<____EOF
         UPDATE $Database__mysql_migration_table
         SET ran_last=0;
 ____EOF
 
-    database_execute "${sql}"
+    Database_execute "${sql}"
 }
 
 #################################################
@@ -122,16 +112,15 @@ ____EOF
 #
 # @param $1: The id of the migration
 # @param $2: What to set ran_last to
-# @visibility: Public
 #################################################
-set_ran_last() {
+Database__set_ran_last() {
     read -d '' sql <<____EOF
         UPDATE $Database__mysql_migration_table
         SET ran_last=$2
         WHERE id=$1;
 ____EOF
 
-    database_execute "${sql}"
+    Database_execute "${sql}"
 }
 
 #################################################
@@ -140,24 +129,21 @@ ____EOF
 #
 # @param $1: The id of the migration
 # @param $2: What to set active to
-# @visibility: Public
 #################################################
-set_active() {
+Database__set_active() {
     read -d '' sql <<____EOF
         UPDATE $Database__mysql_migration_table
         SET active=$2
         WHERE id=$1;
 ____EOF
 
-    database_execute "${sql}"
+    Database_execute "${sql}"
 }
 
 #################################################
 # Get's all migrations that were ran last
-#
-# @visibility: Public
 #################################################
-get_last_ran() {
+Database__get_last_ran() {
     read -d '' sql <<____EOF
     SELECT id, name
     FROM $Database__mysql_migration_table
@@ -165,15 +151,13 @@ get_last_ran() {
     ORDER BY name ASC;
 ____EOF
 
-    echo $(database_fetch "${sql}")
+    echo $(Database_fetch "${sql}")
 }
 
 #################################################
 # Get's all outstanding migrations
-#
-# @visibility: Public
 #################################################
-get_outstanding_migrations() {
+Database__get_outstanding_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
     FROM $Database__mysql_migration_table
@@ -181,15 +165,13 @@ get_outstanding_migrations() {
     ORDER BY name ASC;
 ____EOF
 
-    echo $(database_fetch "${sql}")
+    echo $(Database_fetch "${sql}")
 }
 
 #################################################
 # Get's all active migrations
-#
-# @visibility: Public
 #################################################
-get_active_migrations() {
+Database__get_active_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
     FROM $Database__mysql_migration_table
@@ -197,23 +179,21 @@ get_active_migrations() {
     ORDER BY name ASC;
 ____EOF
 
-    echo $(database_fetch "${sql}")
+    echo $(Database_fetch "${sql}")
 }
-
 
 #################################################
 # Returns a migration from it's name
 #
 # @param $1: The name of the migration
-# @visibility: Public
 #################################################
-get_migration_from_name() {
+Database__get_migration_from_name() {
     read -d '' sql <<____EOF
     SELECT *
     FROM $Database__mysql_migration_table
     WHERE name="$1";
 ____EOF
 
-    echo $(database_fetch "${sql}")
+    echo $(Database_fetch "${sql}")
 }
 

@@ -22,7 +22,7 @@ migrate_make() {
         Logger__success "Revert file located at $revert"
 
         # Creating migration in the database
-        create_migration $migration_name
+        Database__create_migration $migration_name
     fi
 }
 
@@ -31,7 +31,7 @@ migrate_make() {
 #################################################
 migrate_rollback() {
     # Fetching Migrations
-    migrations=$(get_last_ran)
+    migrations=$(Database__get_last_ran)
     error="The last set of migrations were already rolled back"
 
     # Rolling back the migrations
@@ -85,11 +85,11 @@ handle_multiple_revert() {
 handle_single_revert() {
     # Reverting the file
     revert_file=./migrations/revert/"$2"_revert.sql
-    database_file_execute $revert_file
+    Database__file_execute $revert_file
 
     # Updating the database that we haven't ran this
-    set_ran_last $1 0
-    set_active $1 0
+    Database__set_ran_last $1 0
+    Database__set_active $1 0
 
     # Logging our success
     Logger__success "Migration $2 has successfully been reveted"
@@ -100,7 +100,7 @@ handle_single_revert() {
 #################################################
 migrate_reset() {
     # Fetching Migrations
-    migrations=$(get_active_migrations)
+    migrations=$(Database__get_active_migrations)
     error="There were no migrations to revert"
 
     # Rolling back the migrations
@@ -111,14 +111,14 @@ migrate_reset() {
 # Runs all outstanding migrations
 #################################################
 migrate() {
-    migrations=$(get_outstanding_migrations)
+    migrations=$(Database__get_outstanding_migrations)
 
     # Verifying that we have a migration to run
     words=( $migrations )
     if [ ${#words[@]} -ne 0 ]; then
 
         # Setting all migrations ran_last to false
-        reset_ran_last
+        Database__reset_ran_last
 
         # Going through all outstanding migrations
         for column in $migrations
@@ -155,11 +155,11 @@ migrate() {
 handle_single_migration() {
     # Migrating the file
     migration_file=./migrations/migrate/"$2"_migrate.sql
-    database_file_execute $migration_file
+    Database__file_execute $migration_file
 
     # Updating the database that we've ran this
-    set_ran_last $1 1
-    set_active $1 1
+    Database__set_ran_last $1 1
+    Database__set_active $1 1
 
     # Logging our success
     Logger__success "Migration located at $migration_file has successfully executed"
@@ -190,13 +190,13 @@ migrate_update() {
         migration_name=$(echo $file_basename | sed 's/\_migrate.sql//')
 
         # Getting the result from the database
-        migration=$(get_migration_from_name $migration_name)
+        migration=$(Database__get_migration_from_name $migration_name)
 
         # Checking if it already exists
         words=( $migration )
         if [ ${#words[@]} -eq 0 ]
         then
-            create_migration $migration_name
+            Database__create_migration $migration_name
             Logger__success "Migration $migration_name is now being watched"
         fi
     done
@@ -230,15 +230,15 @@ determine_action() {
 # Ensures that the database is set up
 #################################################
 ensure_setup() {
-    exists=$(database_table_exists)
+    exists=$(Database__table_exists)
 
     # Table doesn't exist, create it
     if [ $exists -eq 0 ]; then
         # Creating Table
-        create_migrations_table
+        Database__create_migrations_table
 
         # Logging
-        Logger__alert "Created table $(database_migration_table)"
+        Logger__alert "Created table $(Database__migration_table)"
     fi
 }
 
