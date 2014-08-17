@@ -6,7 +6,7 @@ cd "$(dirname "$0")"
 #
 # @param $1: All parameters passed to Originator 
 #################################################
-Originator__dispatch() {
+Originator_dispatch() {
     IFS=':' read -ra segment <<< "$1"
     for part in "${segment[@]}"; do
         module_location="./modules/$part"
@@ -23,7 +23,7 @@ Originator__dispatch() {
 #################################################
 # Loads all of the autoload files
 #################################################
-Originator__autoload() {
+Originator_autoload() {
     for file in "autoload/*"; do
         . $file
     done
@@ -32,6 +32,6 @@ Originator__autoload() {
 #################################################
 # Start
 #################################################
-Originator__autoload
-Originator__dispatch "$@"
+Originator_autoload
+Originator_dispatch "$@"
 
