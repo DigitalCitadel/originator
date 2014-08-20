@@ -233,6 +233,8 @@ Migrate__map() {
 }
 
 #################################################
+# Displays a single migration of the map
+#
 # @param $1: The name of the migration
 # @param $2: The active status of the migration
 #################################################
