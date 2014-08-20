@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Constant
-LOGGER_error_color='\033[1;31m'
-LOGGER_success_color='\033[0;32m'
-LOGGER_no_color='\033[1;0m'
-LOGGER_alert_color='\033[1;34m'
+Logger_error_color='\033[1;31m'
+Logger_success_color='\033[0;32m'
+Logger_no_color='\033[1;0m'
+Logger_alert_color='\033[1;34m'
 
 # Configurable
-LOGGER__prefix='Originator'
-LOGGER__has_prefix=1
+Logger__prefix='Originator'
+Logger__has_prefix=1
 
 #################################################
 # Logs a message
@@ -23,37 +23,37 @@ Logger_log() {
     fi
 
     # Logging
-    if [ $LOGGER__has_prefix -eq 1 ]; then
-        echo "<< $LOGGER__prefix >>: $1"
+    if [ $Logger__has_prefix -eq 1 ]; then
+        echo "<< $Logger__prefix >>: $1"
     else
         echo $1
     fi
 
     # Disabling color (if param is passed)
     if [ ! -z "$2" ]; then
-        echo -ne "$LOGGER_no_color"
+        echo -ne "$Logger_no_color"
     fi
 }
 
 Logger__log() {
-    Logger_log "$1" "$LOGGER_no_color"
+    Logger_log "$1" "$Logger_no_color"
 }
 
 Logger__error() {
-    Logger_log "$1" "$LOGGER_error_color"
+    Logger_log "$1" "$Logger_error_color"
 }
 
 Logger__success() {
-    Logger_log "$1" "$LOGGER_success_color"
+    Logger_log "$1" "$Logger_success_color"
 }
 
 Logger__alert() {
-    Logger_log "$1" "$LOGGER_alert_color"
+    Logger_log "$1" "$Logger_alert_color"
 }
 
 Logger__prompt() {
-    if [ $LOGGER__has_prefix -eq 1 ]; then
-        echo -n "<< $LOGGER__prefix >>: $1"
+    if [ $Logger__has_prefix -eq 1 ]; then
+        echo -n "<< $Logger__prefix >>: $1"
     else
         echo -n $1
     fi

@@ -201,7 +201,7 @@ Migrate__map() {
     words=( $migrations )
     if [ ${#words[@]} -ne 0 ]; then
         # Disabling logger prefix
-        LOGGER__has_prefix=0
+        Logger__has_prefix=0
 
         # Going through all migrations
         for column in $migrations
@@ -226,7 +226,7 @@ Migrate__map() {
         done
 
         # Enabling logger prefix
-        LOGGER__has_prefix=1
+        Logger__has_prefix=1
     else
         Logger__alert "There are no migrations to display"
     fi
