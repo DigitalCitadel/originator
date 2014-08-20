@@ -111,17 +111,31 @@ Migrate__reset() {
 # Runs all outstanding migrations
 #################################################
 Migrate__index() {
+    # Fetching Migrations
     migrations=$(Database__get_outstanding_migrations)
+    error="There were no migrations to execute"
 
+    # Executing the migrations
+    Migrate_handle_multiple_migration "$migrations" "$error"
+}
+
+#################################################
+# Performs a migration on multiple migrations
+#
+# @param $1: The migrations list
+# @param $2: The error message to display if
+#            there is nothing to migrate
+#################################################
+Migrate_handle_multiple_migration() {
     # Verifying that we have a migration to run
-    words=( $migrations )
+    words=( $1 )
     if [ ${#words[@]} -ne 0 ]; then
 
         # Setting all migrations ran_last to false
         Database__reset_ran_last
 
         # Going through all outstanding migrations
-        for column in $migrations
+        for column in $1
         do
             # id column
             if [ "$id" == "" ]; then
@@ -142,7 +156,7 @@ Migrate__index() {
             name=""
         done
     else
-        Logger__alert "There were no migrations to run"
+        Logger__alert "$2"
     fi
 }
 
