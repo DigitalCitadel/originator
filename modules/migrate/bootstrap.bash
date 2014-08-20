@@ -34,6 +34,8 @@ Migrate_dispatch() {
         Migrate__refresh
     elif [ "$1" = "migrate:map" ]; then
         Migrate__map
+    elif [ "$1" = "migrate:step" ]; then
+        Migrate__step $2
     else
         Logger__error "Action invalid"
     fi

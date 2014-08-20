@@ -232,6 +232,64 @@ Migrate__map() {
     fi
 }
 
+
+#################################################
+# Allows the user to step X number of steps
+# through the migration list.
+#
+# In the event that the user requests more steps
+# then available, we will simply go to the edge
+# and not handle it beyond that.
+#
+# @param $1: A number prefixed with a "+" or "-"
+#   For example, to step forward two migrations
+#   this would be +2.  In order to revert back
+#   five migrations, this would be -5.
+#
+#################################################
+Migrate__step() {
+    if [ -z "$1" ]; then
+        Logger__error "migrate:step requires a second parameter"
+    else
+        # Validating input
+        if [[ "$1" =~ [+-][[:digit:]]+$ ]]; then
+            # Splitting input
+            action=${1:0:1}
+            number=${1:1:${#1}-1}
+            # If step down
+            if [ $action = "-" ]; then
+                Migrate_step_down $number
+            # If step up
+            elif [ $action = "+" ]; then
+                Migrate_step_up $number
+            fi
+        # Invalid Input
+        else
+            Logger__error "Invalid Input.  Input must be in this format: [+-][[:digit:]]+$"
+        fi
+    fi
+}
+
+#################################################
+# Reverts $1 number of migrations starting from
+# most recently migrated.
+#
+# @param $1: The number of migrations to revert
+#################################################
+Migrate_step_down() {
+    echo "Reverting $1"
+}
+
+#################################################
+# Migrates $1 number of migrations starting from
+# the earliest migration.
+#
+# @param $1: The number of migrations to migrate
+#################################################
+Migrate_step_up() {
+    echo "Migrating $1"
+}
+
 #################################################
 # Displays a single migration of the map
 #
