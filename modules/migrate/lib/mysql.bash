@@ -154,6 +154,20 @@ ____EOF
     echo $(Database_fetch "${sql}")
 }
 
+
+#################################################
+# Gets all names + active information
+#################################################
+Database__get_map_data() {
+    read -d '' sql <<____EOF
+    SELECT name, active
+    FROM $Database__mysql_migration_table
+    ORDER BY name ASC;
+____EOF
+
+    echo $(Database_fetch "${sql}")
+}
+
 #################################################
 # Get's all outstanding migrations
 #################################################

@@ -190,6 +190,63 @@ Migrate__refresh() {
     Logger__alert "All migrations have been refreshed"
 }
 
+
+#################################################
+# Displays a visual map of the current state
+# of the migrations
+#################################################
+Migrate__map() {
+    migrations=$(Database__get_map_data)
+
+    words=( $migrations )
+    if [ ${#words[@]} -ne 0 ]; then
+        # Disabling logger prefix
+        LOGGER__has_prefix=0
+
+        # Going through all migrations
+        for column in $migrations
+        do
+            # name column
+            if [ "$name" == "" ]; then
+                name=$column
+                continue
+            fi
+
+            # active column
+            if [ "$active" == "" ]; then
+               active=$column
+            fi
+
+            # Handling
+            Migrate_handle_single_map "$name" "$active"
+
+            # Clearing
+            name=""
+            active=""
+        done
+
+        # Enabling logger prefix
+        LOGGER__has_prefix=1
+    else
+        Logger__alert "There are no migrations to display"
+    fi
+}
+
+#################################################
+# @param $1: The name of the migration
+# @param $2: The active status of the migration
+#################################################
+Migrate_handle_single_map() {
+    # If migration is active
+    if [ $2 -eq 1 ]; then
+        Logger__alert $1
+
+    # Migration is not active
+    else
+        Logger__log $1
+    fi
+}
+
 #################################################
 # Runs through all of the migration files and
 # puts the ones that aren't being tracked in the
