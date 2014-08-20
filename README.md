@@ -14,7 +14,9 @@ Let's let the features speak for themselves, so you should just check out that s
 
 ## Installation
 
-Clone the repo, and you should be good to go.
+After cloning the repo, poke around in modules/migrate/config/.
+
+You'll need to update the `database_config.bash` file, and you'll probably also want to check out the `migrate_config.bash` to tweak a few other small settings.
 
 ## Features + Usage
 
