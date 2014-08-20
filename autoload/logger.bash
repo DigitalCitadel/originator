@@ -35,6 +35,10 @@ Logger_log() {
     fi
 }
 
+Logger__log() {
+    Logger_log "$1" "$LOGGER_no_color"
+}
+
 Logger__error() {
     Logger_log "$1" "$LOGGER_error_color"
 }
