@@ -8,7 +8,9 @@ originator is a framework independent CLI for managing databases.
 
 There are no dependencies for this beyond MySQL (PostgreSQL is next on the list), so you can use this with any type of application.
 
-I'll let the features speak for themselves, so you should just check out that section.
+This CLI is based heavily off of Laravel's Artisan, but adds a few much needed commands.
+
+Let's let the features speak for themselves, so you should just check out that section.
 
 ## Installation
 
