@@ -183,7 +183,41 @@ ____EOF
 }
 
 #################################################
-# Get's all active migrations
+# Gets migrations for the step_down function
+#
+# @param $1: The number of migrations to get
+#################################################
+Database__get_step_down_migrations() {
+    read -d '' sql <<____EOF
+    SELECT id, name
+    FROM $Database__mysql_migration_table
+    WHERE active=1
+    ORDER BY name DESC
+    LIMIT $1
+____EOF
+
+    echo $(Database_fetch "${sql}")
+}
+
+#################################################
+# Gets migrations for the step_up function
+#
+# @param $1: The number of migrations to get
+#################################################
+Database__get_step_up_migrations() {
+    read -d '' sql <<____EOF
+    SELECT id, name
+    FROM $Database__mysql_migration_table
+    WHERE active=0
+    ORDER BY name ASC
+    LIMIT $1
+____EOF
+
+    echo $(Database_fetch "${sql}")
+}
+
+#################################################
+# Gets all active migrations
 #################################################
 Database__get_active_migrations() {
     read -d '' sql <<____EOF

@@ -277,7 +277,11 @@ Migrate__step() {
 # @param $1: The number of migrations to revert
 #################################################
 Migrate_step_down() {
-    echo "Reverting $1"
+    migrations=$(Database__get_step_down_migrations $1)
+    error="There were no migrations to revert"
+
+    # Executing the migrations
+    Migrate_handle_multiple_revert "$migrations" "$error"
 }
 
 #################################################
@@ -287,7 +291,11 @@ Migrate_step_down() {
 # @param $1: The number of migrations to migrate
 #################################################
 Migrate_step_up() {
-    echo "Migrating $1"
+    migrations=$(Database__get_step_up_migrations $1)
+    error="There were no migrations to execute"
+
+    # Executing the migrations
+    Migrate_handle_multiple_migration "$migrations" "$error"
 }
 
 #################################################
