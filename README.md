@@ -64,8 +64,8 @@ Map will display the current status of all of your migrations.  Migrations that 
 
 **Example Output**:
 
-**1407544303_create_foo_table**
-**1407544485_create_bar_table**
+**1407544303_create_foo_table**  
+**1407544485_create_bar_table**  
 1407544548_create_baz_table
 
 ### migrate:step
