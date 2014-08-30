@@ -9,7 +9,7 @@ Database__file_execute() {
     mysql   --user="$Database__mysql_user" \
             --password="$Database__mysql_pass" \
             --database="$Database__mysql_database" \
-            < $1
+            < "$1"
 }
 
 #################################################
@@ -38,7 +38,7 @@ Database_fetch() {
             --password="$Database__mysql_pass" \
             --database="$Database__mysql_database" \
             --execute="$1"
-    echo $out
+    echo "$out"
 }
 
 #################################################

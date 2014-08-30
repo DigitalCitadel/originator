@@ -22,7 +22,7 @@ Migrate__make() {
         Logger__success "Revert file located at $revert"
 
         # Creating migration in the database
-        Database__create_migration $migration_name
+        Database__create_migration "$migration_name"
     fi
 }
 
@@ -65,7 +65,7 @@ Migrate_handle_multiple_revert() {
             fi
 
             # Handling
-            Migrate_handle_single_revert $id $name
+            Migrate_handle_single_revert "$id" "$name"
 
             # Clearing
             id=""
@@ -85,11 +85,11 @@ Migrate_handle_multiple_revert() {
 Migrate_handle_single_revert() {
     # Reverting the file
     revert_file=./migrations/revert/"$2"_revert.sql
-    Database__file_execute $revert_file
+    Database__file_execute "$revert_file"
 
     # Updating the database that we haven't ran this
-    Database__set_ran_last $1 0
-    Database__set_active $1 0
+    Database__set_ran_last "$1" 0
+    Database__set_active "$1" 0
 
     # Logging our success
     Logger__success "Migration $2 has successfully been reverted"
@@ -149,7 +149,7 @@ Migrate_handle_multiple_migration() {
             fi
 
             # Handling
-            Migrate_handle_single_migration $id $name
+            Migrate_handle_single_migration "$id" "$name"
 
             # Clearing
             id=""
@@ -169,11 +169,11 @@ Migrate_handle_multiple_migration() {
 Migrate_handle_single_migration() {
     # Migrating the file
     migration_file=./migrations/migrate/"$2"_migrate.sql
-    Database__file_execute $migration_file
+    Database__file_execute "$migration_file"
 
     # Updating the database that we've ran this
-    Database__set_ran_last $1 1
-    Database__set_active $1 1
+    Database__set_ran_last "$1" 1
+    Database__set_active "$1" 1
 
     # Logging our success
     Logger__success "Migration $2 has successfully been executed"
@@ -257,11 +257,11 @@ Migrate__step() {
             action=${1:0:1}
             number=${1:1:${#1}-1}
             # If step down
-            if [ $action = "-" ]; then
-                Migrate_step_down $number
+            if [ "$action" = "-" ]; then
+                Migrate_step_down "$number"
             # If step up
-            elif [ $action = "+" ]; then
-                Migrate_step_up $number
+            elif [ "$action" = "+" ]; then
+                Migrate_step_up "$number"
             fi
         # Invalid Input
         else
@@ -277,7 +277,7 @@ Migrate__step() {
 # @param $1: The number of migrations to revert
 #################################################
 Migrate_step_down() {
-    migrations=$(Database__get_step_down_migrations $1)
+    migrations=$(Database__get_step_down_migrations "$1")
     error="There were no migrations to revert"
 
     # Executing the migrations
@@ -306,12 +306,12 @@ Migrate_step_up() {
 #################################################
 Migrate_handle_single_map() {
     # If migration is active
-    if [ $2 -eq 1 ]; then
-        Logger__alert $1
+    if [ "$2" -eq 1 ]; then
+        Logger__alert "$1"
 
     # Migration is not active
     else
-        Logger__log $1
+        Logger__log "$1"
     fi
 }
 
@@ -325,11 +325,11 @@ Migrate__update() {
     for file in $migrations_files
     do
         # Getting the migration name
-        file_basename=$(basename $file)
-        migration_name=$(echo $file_basename | sed 's/\_migrate.sql//')
+        file_basename=$(basename "$file")
+        migration_name=$(echo "$file_basename" | sed 's/\_migrate.sql//')
 
         # Getting the result from the database
-        migration=$(Database__get_migration_from_name $migration_name)
+        migration=$(Database__get_migration_from_name "$migration_name")
 
         # Checking if it already exists
         words=( $migration )
@@ -348,7 +348,7 @@ Migrate__ensure_setup() {
     exists=$(Database__table_exists)
 
     # Table doesn't exist, create it
-    if [ $exists -eq 0 ]; then
+    if [ "$exists" -eq 0 ]; then
         # Creating Table
         Database__create_migrations_table
 
