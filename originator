@@ -24,7 +24,7 @@ Originator_dispatch() {
 # Loads all of the autoload files
 #################################################
 Originator_autoload() {
-    for file in "autoload/*"; do
+    for file in autoload/*; do
         . $file
     done
 }
