@@ -4,15 +4,11 @@
 # This calls migrate:update every time any
 # command is ran.
 #
-# By default this is disabled, but you may want
-# to consider enabling this if you're working
-# in a team or between multiple environments. 
-#
 # In a production environment, this is something
-# you would probably want to have disabled, and
-# manage any updates manually.
+# you could want to have disabled, and manage
+# any updates manually.
 #################################################
-Migrate__always_update=0
+Migrate__always_update=1
 
 #################################################
 # Having this flag enabled will worn you each
