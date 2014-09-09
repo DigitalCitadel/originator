@@ -10,6 +10,7 @@ Originator_dispatch() {
     IFS=':' read -ra segment <<< "$1"
     for part in "${segment[@]}"; do
         module_location="./modules/$part"
+        bootstrap_file="$module_location/bootstrap.bash"
         if [ -e "$bootstrap_file" ]; then
             cd "$module_location";
             . "bootstrap.bash"
