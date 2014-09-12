@@ -40,6 +40,8 @@ Migrate by itself will run all outstanding migrations.
 
 Update will run through all of the migration files and ensure that they're being tracked.  This is useful when working in teams or right after running a `git pull` of a repo that has a copy of originator in it.
 
+By default, this operation is ran before any command is executed.  You can disable this in the `migrate_config.bash` file, although it's likely you'll want to keep it enabled if you're working in a team.
+
 **Example Usage**: `./originator migrate:update`
 
 ### migrate:rollback
