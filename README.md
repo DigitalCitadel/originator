@@ -28,7 +28,7 @@ This function will create two files; one named something like `migrations/migrat
 
 In the migrate file, you should create your migration.  In the revert file it should do the opposite of the migrate file.  For example, if you create a table in the migrate file, you should drop the table in the revert file.
 
-**Example Usage**: `./originator migrate:make my_first_migration` 
+**Example Usage**: `./originator migrate:make my_first_migration`
 
 ### migrate
 
@@ -70,8 +70,8 @@ Map will display the current status of all of your migrations.  Migrations that 
 
 **Example Output**:
 
-**1407544303_create_foo_table**  
-**1407544485_create_bar_table**  
+**1407544303_create_foo_table**
+**1407544485_create_bar_table**
 1407544548_create_baz_table
 
 ### migrate:step
@@ -80,7 +80,7 @@ Step will allow you to either revert, or run any number of migrations.
 
 This command in conjunction with `migrate:map` can prevent you from a lot of digging into the database.
 
-**Example Usage**: 
+**Example Usage**:
 
 To migrate: `./originator migrate:step +2`
 To revert:  `./originator migrate:step -3`

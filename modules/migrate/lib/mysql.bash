@@ -25,7 +25,7 @@ Database_execute() {
 }
 
 #################################################
-# Executes a database statement and 
+# Executes a database statement and
 # gives the output
 #
 # @param $1: the statement to be executed
