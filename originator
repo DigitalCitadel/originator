@@ -4,7 +4,7 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 #################################################
 # Loads the correct module
 #
-# @param $1: All parameters passed to Originator 
+# @param $1: All parameters passed to Originator
 #################################################
 Originator_dispatch() {
     IFS=':' read -ra segment <<< "$1"
@@ -24,8 +24,8 @@ Originator_dispatch() {
 #################################################
 # Loads all of the autoload files
 #################################################
-Originator_autoload() {
-    for file in autoload/*; do
+Originator__autoload() {
+    for file in "$1"/*; do
         . "$file"
     done
 }
@@ -33,6 +33,16 @@ Originator_autoload() {
 #################################################
 # Start
 #################################################
-Originator_autoload
+# Loading Libs + Config
+Originator__autoload lib
+Originator__autoload config
+
+# Loading environent specific config
+environment_config="config_$Environment__host"
+if [[ -d $environment_config ]] && [[ "$(ls -A $environment_config)" ]]; then
+    Originator__autoload $environment_config
+fi
+
+# Dispatching to the specific module
 Originator_dispatch "$@"
 

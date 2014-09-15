@@ -16,7 +16,7 @@ Migrate__always_update=1
 # you for your acknowledgement.
 #
 # This is disabled by default, but is highly
-# recommended to enable if your application 
+# recommended to enable if your application
 # is actually in production.
 #################################################
 Migrate__app_in_production=1

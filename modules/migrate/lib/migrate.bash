@@ -11,14 +11,14 @@ Migrate__make() {
     else
         epoch_time=$(date +%s)
         migration_name="$epoch_time"_"$1"
-        
+
         migrate=./migrations/migrate/"$migration_name"_migrate.sql
         revert=./migrations/revert/"$migration_name"_revert.sql
 
         # Creating migration files
         touch "$migrate"
         Logger__success "Migrate file located at $migrate"
-        touch "$revert" 
+        touch "$revert"
         Logger__success "Revert file located at $revert"
 
         # Creating migration in the database

@@ -25,7 +25,7 @@ Database_execute() {
 }
 
 #################################################
-# Executes a database statement and 
+# Executes a database statement and
 # gives the output
 #
 # @param $1: the statement to be executed
@@ -148,7 +148,7 @@ Database__get_last_ran() {
     SELECT id, name
     FROM $Database__mysql_migration_table
     WHERE ran_last=1
-    ORDER BY name ASC;
+    ORDER BY name DESC;
 ____EOF
 
     echo $(Database_fetch "${sql}")
@@ -224,7 +224,7 @@ Database__get_active_migrations() {
     SELECT id, name
     FROM $Database__mysql_migration_table
     WHERE active=1
-    ORDER BY name ASC;
+    ORDER BY name DESC;
 ____EOF
 
     echo $(Database_fetch "${sql}")
