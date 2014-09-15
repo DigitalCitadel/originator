@@ -33,7 +33,16 @@ Originator__autoload() {
 #################################################
 # Start
 #################################################
+# Loading Libs + Config
 Originator__autoload lib
 Originator__autoload config
+
+# Loading environent specific config
+environment_config="config_$Environment__host"
+if [[ -d $environment_config ]] && [[ "$(ls -A $environment_config)" ]]; then
+    Originator__autoload $environment_config
+fi
+
+# Dispatching to the specific module
 Originator_dispatch "$@"
 
