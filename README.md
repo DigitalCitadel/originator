@@ -85,6 +85,14 @@ This command in conjunction with `migrate:map` can prevent you from a lot of dig
 To migrate: `./originator migrate:step +2`
 To revert:  `./originator migrate:step -3`
 
+## Multiple Environments
+
+If you're using originator for multiple environments, you may run into a situation that you would like different config values for each of those environments.
+
+Handling this is really simple with originator.
+
+In the base directory, create a new directory with this command `mkdir config_$(hostname)`.  All of the files in this directory are autoloaded after all of the global config files are loaded.  This allows us to override config values to tweak them appropriately for this environment.  These folders are also in the `.gitignore` file, so you don't have to worry about cluttering your repo with environment specifics.
+
 ## The Future
 
 As mentioned, originator is in early development.  There are plans to soon support PostgreSQL.
