@@ -22,11 +22,13 @@ Originator_dispatch() {
 }
 
 #################################################
-# Loads all of the autoload files
+# Loads all of the autoload files. Non-recursive
 #################################################
 Originator__autoload() {
     for file in "$1"/*; do
-        . "$file"
+        if [[ -f "$file" ]]; then
+            . "$file"
+        fi
     done
 }
 
