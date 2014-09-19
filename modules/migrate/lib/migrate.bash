@@ -321,24 +321,28 @@ Migrate_handle_single_map() {
 # database.
 #################################################
 Migrate__update() {
-    migrations_files="migrations/migrate/*.sql"
-    for file in $migrations_files
-    do
-        # Getting the migration name
-        file_basename=$(basename "$file")
-        migration_name=$(echo "$file_basename" | sed 's/\_migrate.sql//')
+    migrations_folder="migrations/migrate/"
 
-        # Getting the result from the database
-        migration=$(Database__get_migration_from_name "$migration_name")
+    # If there are migrations in the directory
+    if [[ "$(ls $migrations_folder)" ]]; then
+        for file in "$migrations_folder"*.sql
+        do
+            # Getting the migration name
+            file_basename=$(basename "$file")
+            migration_name=$(echo "$file_basename" | sed 's/\_migrate.sql//')
 
-        # Checking if it already exists
-        words=( $migration )
-        if [ ${#words[@]} -eq 0 ]
-        then
-            Database__create_migration $migration_name
-            Logger__success "Migration $migration_name is now being watched"
-        fi
-    done
+            # Getting the result from the database
+            migration=$(Database__get_migration_from_name "$migration_name")
+
+            # Checking if it already exists
+            words=( $migration )
+            if [ ${#words[@]} -eq 0 ]
+            then
+                Database__create_migration $migration_name
+                Logger__success "Migration $migration_name is now being watched"
+            fi
+        done
+    fi
 }
 
 #################################################
