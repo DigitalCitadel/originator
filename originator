@@ -36,8 +36,8 @@ Originator__autoload() {
 # Start
 #################################################
 # Loading Libs + Config
-Originator__autoload lib
 Originator__autoload config
+Originator__autoload lib
 
 # Loading environent specific config
 environment_config=config_"$Environment__host"
