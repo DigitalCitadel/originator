@@ -39,7 +39,18 @@ Backup__restore() {
     if [[ -z "$1" ]]; then
         Logger__error "backup:restore requires a second parameter for the timestamp of the backup."
     else
-        echo "Backup__restore $1"
+        table_dir="./backups/$1/tables"
+        if [[ -d $table_dir ]]; then
+            if [[ "$(ls $table_dir)" ]]; then
+                for file in "$table_dir"/*; do
+                        Database__file_execute $file
+                done
+            else
+                Logger__error "There aren't any files to restore in that backup"
+            fi
+        else
+            Logger__error "Invalid timestamp"
+        fi
     fi
 }
 
