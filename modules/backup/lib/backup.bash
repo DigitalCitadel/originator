@@ -54,3 +54,14 @@ Backup__restore() {
     fi
 }
 
+#################################################
+# Displays all of the available backups with
+# their associated last migration
+#################################################
+Backup__map() {
+    backup_dir="./backups"
+    for backup in "$backup_dir"/*; do
+         
+    done
+}
+

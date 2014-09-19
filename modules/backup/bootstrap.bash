@@ -16,6 +16,8 @@ Backup_dispatch() {
         Backup__index
     elif [ "$1" = "backup:restore" ]; then
         Backup__restore $2
+    elif [ "$1" = "backup:map" ]; then
+        Backup__map
     else
         Logger__error "Action invalid"
     fi
