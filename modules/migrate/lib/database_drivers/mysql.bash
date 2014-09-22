@@ -70,7 +70,7 @@ Database__create_migrations_table() {
     (
         id BIGINT NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (id),
-        name VARCHAR(64) NULL,
+        name VARCHAR(255) NULL,
         ran_last BOOLEAN NULL,
         active BOOLEAN NULL
     )
