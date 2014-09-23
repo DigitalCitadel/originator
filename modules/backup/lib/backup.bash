@@ -59,9 +59,15 @@ Backup__restore() {
 # their associated last migration
 #################################################
 Backup__map() {
+    # Disabling logger prefix
+    Logger__has_prefix=0
+
     backup_dir="./backups"
     for backup in "$backup_dir"/*; do
-         
+        if [[ -d $backup ]]; then
+            backup_basename="$(basename $backup)"
+            Logger__log "$backup_basename : $(cat $backup/last_migration.txt)"
+        fi
     done
 }
 
