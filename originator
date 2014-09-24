@@ -15,7 +15,7 @@ Originator_dispatch() {
             cd "$module_location";
             . "bootstrap.bash"
         else
-            echo "Module $part does not exist."
+            Logger__error "Module $part does not exist."
         fi
         break
     done
@@ -36,8 +36,8 @@ Originator__autoload() {
 # Start
 #################################################
 # Loading Libs + Config
-Originator__autoload lib
 Originator__autoload config
+Originator__autoload lib
 
 # Loading environent specific config
 environment_config=config_"$Environment__host"

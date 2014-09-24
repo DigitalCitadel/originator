@@ -4,7 +4,7 @@
 
 originator is a framework independent CLI for managing databases.
 
-## Why should you care?
+# Why should you care?
 
 There are no dependencies for this beyond MySQL (PostgreSQL is next on the list), so you can use this with any type of application.
 
@@ -12,13 +12,19 @@ This CLI is based heavily off of Laravel's Artisan, but adds a few much needed c
 
 Let's let the features speak for themselves, so you should just check out that section.
 
-## Installation
+# Installation
 
 After cloning the repo, poke around in modules/migrate/config/.
 
 You'll need to update the `database_config.bash` file, and you'll probably also want to check out the `migrate_config.bash` to tweak a few other small settings.
 
-## Features + Usage
+# Features + Usage
+
+## Migrate Module
+
+The migrate module makes it easy to manage your database migrations.
+
+Here's a list of the available commands.
 
 ### migrate:make
 
@@ -85,7 +91,38 @@ This command in conjunction with `migrate:map` can prevent you from a lot of dig
 To migrate: `./originator migrate:step +2`
 To revert:  `./originator migrate:step -3`
 
-## Multiple Environments
+## Backup Module
+
+The migrate module makes it easy to manage your database backups.
+
+Here's a list of the available commands.
+
+### backup
+
+Running backup by itself will generate a backup of all of the tables in the database (except originators migrations table).
+
+**Example Usage**: `./originator backup`
+
+### backup:restore
+
+Restore will restore a specific backup given a timestamp.
+
+**Example Usage**: `./originator backup:restore 1411162872`
+
+### backup:map
+
+Map will display a list of available backups with their associated last migration.
+
+**Example Usage**: `./originator backup:map`
+
+**Example Output**:
+
+```
+1411161710 : 1411162330_create_bar_table
+1411162872 : 1411162330_create_bar_table
+```
+
+# Multiple Environments
 
 If you're using originator for multiple environments, you may run into a situation that you would like different config values for each of those environments.
 
@@ -93,12 +130,12 @@ Handling this is really simple with originator.
 
 In the base directory, create a new directory with this command `mkdir config_$(hostname)`.  All of the files in this directory are autoloaded after all of the global config files are loaded.  This allows us to override config values to tweak them appropriately for this environment.  These folders are also in the `.gitignore` file, so you don't have to worry about cluttering your repo with environment specifics.
 
-## The Future
+# The Future
 
 As mentioned, originator is in early development.  There are plans to soon support PostgreSQL.
 
 There will also soon be a database backup component that will make creating / restoring backups relatively effortless.
 
-## License & Contributing
+# License & Contributing
 originator is licensed under [MIT](license.md)
 
