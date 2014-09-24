@@ -15,7 +15,7 @@ Originator_dispatch() {
             cd "$module_location";
             . "bootstrap.bash"
         else
-            echo "Module $part does not exist."
+            Logger__error "Module $part does not exist."
         fi
         break
     done
