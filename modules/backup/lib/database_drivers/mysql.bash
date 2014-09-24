@@ -22,7 +22,7 @@ Database__get_tables() {
     read -d '' sql <<____EOF
     SHOW tables
     FROM $Database__mysql_database
-    WHERE Tables_in_$Database__mysql_database 
+    WHERE Tables_in_$Database__mysql_database
         <> '$Database__mysql_migration_table';
 ____EOF
 

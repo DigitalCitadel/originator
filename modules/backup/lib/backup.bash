@@ -32,7 +32,7 @@ Backup__index() {
 # Restores an entire database
 #
 # @param $1: The timestamp of the backup.
-# This is also the folder name in the backups 
+# This is also the folder name in the backups
 # directory
 #################################################
 Backup__restore() {
