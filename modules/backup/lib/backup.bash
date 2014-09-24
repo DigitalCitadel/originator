@@ -23,6 +23,9 @@ Backup__index() {
             file="$backup_dir/tables/$table.sql"
             Database__backup_table "$table" "$file"
         done
+
+        # logging success
+        Logger__success "Backup $timestamp has been created"
     else
         Logger__alert "There are no tables to backup"
     fi
@@ -45,6 +48,7 @@ Backup__restore() {
                 for file in "$table_dir"/*; do
                         Database__file_execute $file
                 done
+                Logger__success "Backup $1 has successfully been restored"
             else
                 Logger__error "There aren't any files to restore in that backup"
             fi
@@ -59,15 +63,21 @@ Backup__restore() {
 # their associated last migration
 #################################################
 Backup__map() {
-    # Disabling logger prefix
-    Logger__has_prefix=0
-
     backup_dir="./backups"
-    for backup in "$backup_dir"/*; do
-        if [[ -d $backup ]]; then
-            backup_basename="$(basename $backup)"
-            Logger__log "$backup_basename : $(cat $backup/last_migration.txt)"
-        fi
-    done
+    # Checking for valid backup
+    if [[ -d $backup_dir ]] && [[ "$(ls $backup_dir)" ]]; then
+        # Disabling logger prefix
+        Logger__has_prefix=0
+
+        # Looping over backup files
+        for backup in "$backup_dir"/*; do
+            if [[ -d $backup ]]; then
+                backup_basename="$(basename $backup)"
+                Logger__log "$backup_basename : $(cat $backup/last_migration.txt)"
+            fi
+        done
+    else
+        Logger__error "There are no backups to display"
+    fi
 }
 
