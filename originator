@@ -36,11 +36,11 @@ Originator__autoload() {
 # Start
 #################################################
 # Loading Libs + Config
-Originator__autoload config
+Originator__autoload config/default
 Originator__autoload lib
 
 # Loading environent specific config
-environment_config=config_"$Environment__host"
+environment_config=config/"$Environment__host"
 if [[ -d $environment_config ]] && [[ "$(ls $environment_config)" ]]; then
     Originator__autoload $environment_config
 fi
