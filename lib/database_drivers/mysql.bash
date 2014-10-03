@@ -6,10 +6,11 @@
 # @param $1: the sql file to be executed
 #################################################
 Database__file_execute() {
-    mysql   --user="$Database__mysql_user" \
-            --password="$Database__mysql_pass" \
-            --database="$Database__mysql_database" \
-            < "$1"
+    "$Database__mysql_path" \
+        --user="$Database__mysql_user" \
+        --password="$Database__mysql_pass" \
+        --database="$Database__mysql_database" \
+        < "$1"
 }
 
 #################################################
@@ -18,10 +19,11 @@ Database__file_execute() {
 # @param $1: the statement to be executed
 #################################################
 Database__execute() {
-    mysql   --user="$Database__mysql_user" \
-            --password="$Database__mysql_pass" \
-            --database="$Database__mysql_database" \
-            --execute="$1"
+    "$Database__mysql_path" \
+        --user="$Database__mysql_user" \
+        --password="$Database__mysql_pass" \
+        --database="$Database__mysql_database" \
+        --execute="$1"
 }
 
 #################################################
@@ -31,13 +33,14 @@ Database__execute() {
 # @param $1: the statement to be executed
 #################################################
 Database__fetch() {
-    mysql   --silent \
-            --skip-column-names \
-            --batch \
-            --user="$Database__mysql_user" \
-            --password="$Database__mysql_pass" \
-            --database="$Database__mysql_database" \
-            --execute="$1"
+    "$Database__mysql_path" \
+        --silent \
+        --skip-column-names \
+        --batch \
+        --user="$Database__mysql_user" \
+        --password="$Database__mysql_pass" \
+        --database="$Database__mysql_database" \
+        --execute="$1"
     echo "$out"
 }
 

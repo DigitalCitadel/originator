@@ -8,6 +8,7 @@ Database__driver='mysql'
 #################################################
 # MySQL config
 #################################################
+Database__mysql_path='mysql'
 Database__mysql_user='root'
 Database__mysql_pass='root'
 Database__mysql_database='originator_test'
