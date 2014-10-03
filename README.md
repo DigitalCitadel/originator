@@ -128,7 +128,7 @@ If you're using originator for multiple environments, you may run into a situati
 
 Handling this is really simple with originator.
 
-In the base directory, create a new directory with this command `mkdir config_$(hostname)`.  All of the files in this directory are autoloaded after all of the global config files are loaded.  This allows us to override config values to tweak them appropriately for this environment.  These folders are also in the `.gitignore` file, so you don't have to worry about cluttering your repo with environment specifics.
+In the base directory, create a new directory with this command `mkdir config/$(hostname)`.  All of the files in this directory are autoloaded after all of the global config files are loaded.  This allows us to override config values to tweak them appropriately for this environment.  These folders are also in the `.gitignore` file, so you don't have to worry about cluttering your repo with environment specifics.
 
 # The Future
 
