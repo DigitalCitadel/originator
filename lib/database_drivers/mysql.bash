@@ -10,6 +10,7 @@ Database__file_execute() {
         --user="$Database__mysql_user" \
         --password="$Database__mysql_pass" \
         --database="$Database__mysql_database" \
+        --host="$Database__mysql_host" \
         < "$1"
 }
 
@@ -23,6 +24,7 @@ Database__execute() {
         --user="$Database__mysql_user" \
         --password="$Database__mysql_pass" \
         --database="$Database__mysql_database" \
+        --host="$Database__mysql_host" \
         --execute="$1"
 }
 
@@ -40,6 +42,7 @@ Database__fetch() {
         --user="$Database__mysql_user" \
         --password="$Database__mysql_pass" \
         --database="$Database__mysql_database" \
+        --host="$Database__mysql_host" \
         --execute="$1"
     echo "$out"
 }
