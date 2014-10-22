@@ -2,7 +2,7 @@
 
 #################################################
 # This is the location of the migrations folder
-# in relation to the originator-files folder
+# in relation to the originator-files directory
 #################################################
 Migrate__migrations_folder="migrations"
 

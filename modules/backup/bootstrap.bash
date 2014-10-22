@@ -2,7 +2,7 @@
 #################################################
 # Libs
 #################################################
-Originator__autoload lib
+Originator__autoload "$Originator__module_directory"/lib
 
 #################################################
 # Dispatch
