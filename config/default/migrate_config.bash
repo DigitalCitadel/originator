@@ -1,6 +1,12 @@
 #!/bin/bash
 
 #################################################
+# This is the location of the migrations folder
+# in relation to the originator-files folder
+#################################################
+Migrate__migrations_folder="migrations"
+
+#################################################
 # This calls migrate:update every time any
 # command is ran.
 #

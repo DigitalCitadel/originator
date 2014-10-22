@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Determining the migrate folder
+Migrate_folder="$Originator__config_directory/$Migrate__migrations_folder"
+
 #################################################
 # Creates a new migration
 #
@@ -12,14 +15,15 @@ Migrate__make() {
         epoch_time=$(date +%s)
         migration_name="$epoch_time"_"$1"
 
-        migrate=./migrations/migrate/"$migration_name"_migrate.sql
-        revert=./migrations/revert/"$migration_name"_revert.sql
+        # Determing location of migration and revert files
+        migrate="$Migrate_folder/migrate/$migration_name"_migrate.sql
+        revert="$Migrate_folder/revert/$migration_name"_revert.sql
 
         # Creating migration files
         touch "$migrate"
-        Logger__success "Migrate file located at $migrate"
+        Logger__success "Migration $migration_name""_migrate.sql has been created"
         touch "$revert"
-        Logger__success "Revert file located at $revert"
+        Logger__success "Revert $migration_name""_revert.sql has been created"
 
         # Creating migration in the database
         Database__create_migration "$migration_name"
@@ -84,7 +88,7 @@ Migrate_handle_multiple_revert() {
 #################################################
 Migrate_handle_single_revert() {
     # Reverting the file
-    revert_file=./migrations/revert/"$2"_revert.sql
+    revert_file="$Migrate_folder/revert/$2"_revert.sql
     Database__file_execute "$revert_file"
 
     # Updating the database that we haven't ran this
@@ -168,7 +172,7 @@ Migrate_handle_multiple_migration() {
 #################################################
 Migrate_handle_single_migration() {
     # Migrating the file
-    migration_file=./migrations/migrate/"$2"_migrate.sql
+    migration_file="$Migrate_folder/migrate/$2"_migrate.sql
     Database__file_execute "$migration_file"
 
     # Updating the database that we've ran this
@@ -189,7 +193,6 @@ Migrate__refresh() {
     Migrate__index
     Logger__alert "All migrations have been refreshed"
 }
-
 
 #################################################
 # Displays a visual map of the current state
@@ -321,7 +324,7 @@ Migrate_handle_single_map() {
 # database.
 #################################################
 Migrate__update() {
-    migrations_folder="migrations/migrate/"
+    migrations_folder="$Migrate_folder/migrate/"
 
     # If there are migrations in the directory
     if [[ "$(ls $migrations_folder)" ]]; then
