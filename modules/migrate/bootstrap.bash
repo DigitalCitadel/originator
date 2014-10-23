@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Checking if this is an initialized directory
+Originator__check_init
+
 #################################################
 # Libs
 #################################################

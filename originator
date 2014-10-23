@@ -31,6 +31,19 @@ Originator__autoload() {
 }
 
 #################################################
+# Checks if called from an initialized directory,
+# if not originator shuts down
+#################################################
+Originator__check_init() {
+    # If we're not in a directory with a config folder, exit
+    if [[ ! -d "$Originator__config_directory" ]]; then
+        . "$Originator__lib_directory/lib/logger.bash"
+        Logger__error "The current directory is not initialized"
+        exit
+    fi
+}
+
+#################################################
 # Start
 #################################################
 # Config
@@ -41,12 +54,6 @@ Originator__files_folder="originator-files"
 Originator__call_directory="$( pwd )"
 Originator__config_directory="$Originator__call_directory/$Originator__files_folder"
 Originator__module_directory="" # To be determined
-
-# If we're not in a directory with a config folder, exit
-if [[ ! -d "$Originator__config_directory" ]]; then
-    echo "There is no $Originator__files_folder folder in the current directory"
-    exit
-fi
 
 # Loading default config
 default_config="$Originator__config_directory"/config/default
