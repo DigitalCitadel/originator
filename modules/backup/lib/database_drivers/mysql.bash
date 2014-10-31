@@ -7,11 +7,11 @@
 # @param $2: The file to write it to
 #################################################
 Database__backup_table() {
-    mysqldump   -u $Database__mysql_user \
-                -p$Database__mysql_pass \
-                --no-create-info \
-                $Database__mysql_database \
-                $1 > $2
+    mysqldump \
+            --defaults-extra-file="$Mysql__config_file" \
+            --no-create-info \
+            $Database__mysql_database \
+            $1 > $2
 }
 
 #################################################

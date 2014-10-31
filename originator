@@ -68,6 +68,12 @@ fi
 # Loading Libs
 Originator__autoload "$Originator__lib_directory"/lib
 
+# Setting up the database
+Database__setup
+
 # Dispatching to the specific module
 Originator_dispatch "$@"
+
+# Shutting down the database
+Database__shutdown
 
