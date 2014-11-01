@@ -1,7 +1,5 @@
 # originator
 
-> **Note:** This project is in early development, and versioning is a little different. [Read this](http://markup.im/#q4_cRZ1Q) for more details.
-
 originator is a framework independent CLI for managing databases.
 
 # Why should you care?
@@ -14,11 +12,17 @@ Let's let the features speak for themselves, so you should just check out that s
 
 # Installation
 
-After cloning the repo, poke around in modules/migrate/config/.
-
-You'll need to update the `database_config.bash` file, and you'll probably also want to check out the `migrate_config.bash` to tweak a few other small settings.
+After cloning the repo, run the install script, and you should be good to go!
 
 # Features + Usage
+
+## Adding originator to a project
+
+To add originator to a project, just run `originator self:init`.  You'll see a new directory `originator-files` appear in your current directory.  This is the folder that stores the config, migrations, and backups.
+
+When initially setting up a project, you'll need to update some config files.  Open up `config/default/database_config.bash` and update the values to match your database credentials.
+
+You'll also likely want go into `config/default/migrate_config.bash` and turn off the app in production variable to prevent the warning messages.
 
 ## Migrate Module
 

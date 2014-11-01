@@ -1,5 +1,4 @@
 #!/bin/bash
-cd "$( dirname "${BASH_SOURCE[0]}" )"
 
 #################################################
 # Loads the correct module
@@ -9,11 +8,10 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 Originator_dispatch() {
     IFS=':' read -ra segment <<< "$1"
     for part in "${segment[@]}"; do
-        module_location="./modules/$part"
-        bootstrap_file="$module_location/bootstrap.bash"
+        Originator__module_directory="$Originator__lib_directory/modules/$part"
+        bootstrap_file="$Originator__module_directory/bootstrap.bash"
         if [ -e "$bootstrap_file" ]; then
-            cd "$module_location";
-            . "bootstrap.bash"
+            . "$Originator__module_directory/bootstrap.bash"
         else
             Logger__error "Module $part does not exist."
         fi
@@ -33,20 +31,50 @@ Originator__autoload() {
 }
 
 #################################################
+# Checks if called from an initialized directory,
+# if not originator shuts down
+#################################################
+Originator__check_init() {
+    # If we're not in a directory with a config folder, exit
+    if [[ ! -d "$Originator__config_directory" ]]; then
+        . "$Originator__lib_directory/lib/logger.bash"
+        Logger__error "The current directory is not initialized"
+        exit
+    fi
+}
+
+#################################################
 # Start
 #################################################
+# Config
+Originator_call_file=$(readlink ${BASH_SOURCE[0]})
+Originator__lib_directory="$(dirname "$Originator_call_file")"
+Originator__files_folder="originator-files"
+
+# Determining directories
+Originator__call_directory="$( pwd )"
+Originator__config_directory="$Originator__call_directory/$Originator__files_folder"
+Originator__module_directory="" # To be determined
+
 # Loading default config
-Originator__autoload config/default
+default_config="$Originator__config_directory"/config/default
+Originator__autoload "$default_config"
 
 # Loading environent specific config
-environment_config=config/"$(hostname)"
+environment_config="$Originator__config_directory"/config/"$(hostname)"
 if [[ -d $environment_config ]] && [[ "$(ls $environment_config)" ]]; then
     Originator__autoload $environment_config
 fi
 
 # Loading Libs
-Originator__autoload lib
+Originator__autoload "$Originator__lib_directory"/lib
+
+# Setting up the database
+Database__setup
 
 # Dispatching to the specific module
 Originator_dispatch "$@"
+
+# Shutting down the database
+Database__shutdown
 

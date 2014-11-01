@@ -1,8 +1,12 @@
 #!/bin/bash
+
+# Checking if this is an initialized directory
+Originator__check_init
+
 #################################################
 # Libs
 #################################################
-Originator__autoload lib
+Originator__autoload "$Originator__module_directory"/lib
 
 #################################################
 # Dispatch

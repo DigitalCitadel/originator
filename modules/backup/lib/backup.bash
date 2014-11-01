@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Getting backups directory
+Backup_folder="$Originator__config_directory/$Backup__backups_folder"
+
 #################################################
 # Backs up the entire database
 #################################################
@@ -11,7 +14,7 @@ Backup__index() {
 
         # Preparing backup directory
         timestamp=$(date +%s)
-        backup_dir="./backups/$timestamp"
+        backup_dir="$Backup_folder/$timestamp"
         mkdir "$backup_dir"
         mkdir "$backup_dir/tables"
         last_migration=$(Database__get_most_recent_migration)
@@ -42,11 +45,11 @@ Backup__restore() {
     if [[ -z "$1" ]]; then
         Logger__error "backup:restore requires a second parameter for the timestamp of the backup."
     else
-        table_dir="./backups/$1/tables"
+        table_dir="$Backup_folder/$1/tables"
         if [[ -d $table_dir ]]; then
             if [[ "$(ls $table_dir)" ]]; then
                 for file in "$table_dir"/*; do
-                        Database__file_execute $file
+                        Database__restore_file $file
                 done
                 Logger__success "Backup $1 has successfully been restored"
             else
@@ -63,14 +66,13 @@ Backup__restore() {
 # their associated last migration
 #################################################
 Backup__map() {
-    backup_dir="./backups"
     # Checking for valid backup
-    if [[ -d $backup_dir ]] && [[ "$(ls $backup_dir)" ]]; then
+    if [[ -d $Backup_folder ]] && [[ "$(ls $Backup_folder)" ]]; then
         # Disabling logger prefix
         Logger__has_prefix=0
 
         # Looping over backup files
-        for backup in "$backup_dir"/*; do
+        for backup in "$Backup_folder"/*; do
             if [[ -d $backup ]]; then
                 backup_basename="$(basename $backup)"
                 Logger__log "$backup_basename : $(cat $backup/last_migration.txt)"

@@ -7,11 +7,11 @@
 # @param $2: The file to write it to
 #################################################
 Database__backup_table() {
-    mysqldump   -u $Database__mysql_user \
-                -p$Database__mysql_pass \
-                --no-create-info \
-                $Database__mysql_database \
-                $1 > $2
+    mysqldump \
+            --defaults-extra-file="$Mysql__config_file" \
+            --no-create-info \
+            $Database__mysql_database \
+            $1 > $2
 }
 
 #################################################
@@ -26,7 +26,7 @@ Database__get_tables() {
         <> '$Database__mysql_migration_table';
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 
 
@@ -43,6 +43,15 @@ Database__get_most_recent_migration() {
     LIMIT 1
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
+}
+
+#################################################
+# Restores a single file
+#
+# @param $1: The file to restore
+#################################################
+Database__restore_file() {
+    Mysql__file_execute $1
 }
 
