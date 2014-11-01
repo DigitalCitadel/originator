@@ -47,7 +47,8 @@ Originator__check_init() {
 # Start
 #################################################
 # Config
-Originator__lib_directory="/Users/brandon/Dev/originator"
+Originator_call_file=$(readlink ${BASH_SOURCE[0]})
+Originator__lib_directory="$(dirname "$Originator_call_file")"
 Originator__files_folder="originator-files"
 
 # Determining directories
