@@ -8,7 +8,7 @@ Mysql__config_file="$Originator__config_directory/mysql_config.cnf"
 #
 # @param $1: the sql file to be executed
 #################################################
-Database__file_execute() {
+Mysql__file_execute() {
     "$Database__mysql_path" \
         --defaults-extra-file="$Mysql__config_file" \
         --database="$Database__mysql_database" \
@@ -20,7 +20,7 @@ Database__file_execute() {
 #
 # @param $1: the statement to be executed
 #################################################
-Database__execute() {
+Mysql__execute() {
     "$Database__mysql_path" \
         --defaults-extra-file="$Mysql__config_file" \
         --database="$Database__mysql_database" \
@@ -33,7 +33,7 @@ Database__execute() {
 #
 # @param $1: the statement to be executed
 #################################################
-Database__fetch() {
+Mysql__fetch() {
     "$Database__mysql_path" \
         --defaults-extra-file="$Mysql__config_file" \
         --silent \
@@ -50,9 +50,9 @@ Database__fetch() {
 # This is to be created + destoyed in the span
 # of one command
 #################################################
-Database__generate_config() {
+Mysql__generate_config() {
     # Deleting old mysql config file if it existed
-    Database__delete_config
+    Mysql__delete_config
 
     # Creating new MySQL config file
     touch "$Mysql__config_file"
@@ -67,7 +67,7 @@ Database__generate_config() {
 #################################################
 # Deletes the temporary database config file
 #################################################
-Database__delete_config() {
+Mysql__delete_config() {
     # Deleting old mysql config file if it existed
     if [[ -e "$Mysql__config_file" ]]; then
         rm "$Mysql__config_file"

@@ -49,7 +49,7 @@ Backup__restore() {
         if [[ -d $table_dir ]]; then
             if [[ "$(ls $table_dir)" ]]; then
                 for file in "$table_dir"/*; do
-                        Database__file_execute $file
+                        Database__restore_file $file
                 done
                 Logger__success "Backup $1 has successfully been restored"
             else

@@ -4,7 +4,7 @@
 # Check if a database table exists
 #################################################
 Database__table_exists() {
-    var=$(Database__execute "SHOW TABLES LIKE '$Database__mysql_migration_table'")
+    var=$(Mysql__execute "SHOW TABLES LIKE '$Database__mysql_migration_table'")
     if [ "$var" = "" ]; then
         echo 0
     else
@@ -36,7 +36,7 @@ Database__create_migrations_table() {
     ENGINE=InnoDB;
 ____EOF
 
-    Database__execute "${sql}"
+    Mysql__execute "${sql}"
 }
 
 #################################################
@@ -50,7 +50,7 @@ Database__create_migration() {
     VALUES (DEFAULT, "$1", FALSE, FALSE);
 ____EOF
 
-    Database__execute "${sql}"
+    Mysql__execute "${sql}"
 }
 
 #################################################
@@ -62,7 +62,7 @@ Database__reset_ran_last() {
         SET ran_last=0;
 ____EOF
 
-    Database__execute "${sql}"
+    Mysql__execute "${sql}"
 }
 
 #################################################
@@ -79,7 +79,7 @@ Database__set_ran_last() {
         WHERE id=$1;
 ____EOF
 
-    Database__execute "${sql}"
+    Mysql__execute "${sql}"
 }
 
 #################################################
@@ -96,7 +96,7 @@ Database__set_active() {
         WHERE id=$1;
 ____EOF
 
-    Database__execute "${sql}"
+    Mysql__execute "${sql}"
 }
 
 #################################################
@@ -110,7 +110,7 @@ Database__get_last_ran() {
     ORDER BY name DESC;
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 
 
@@ -124,7 +124,7 @@ Database__get_map_data() {
     ORDER BY name ASC;
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 
 #################################################
@@ -138,7 +138,7 @@ Database__get_outstanding_migrations() {
     ORDER BY name ASC;
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 
 #################################################
@@ -155,7 +155,7 @@ Database__get_step_down_migrations() {
     LIMIT $1
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 
 #################################################
@@ -172,7 +172,7 @@ Database__get_step_up_migrations() {
     LIMIT $1
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 
 #################################################
@@ -186,7 +186,7 @@ Database__get_active_migrations() {
     ORDER BY name DESC;
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 
 #################################################
@@ -201,6 +201,6 @@ Database__get_migration_from_name() {
     WHERE name="$1";
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 

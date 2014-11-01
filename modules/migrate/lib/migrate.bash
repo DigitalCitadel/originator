@@ -89,7 +89,7 @@ Migrate_handle_multiple_revert() {
 Migrate_handle_single_revert() {
     # Reverting the file
     revert_file="$Migrate_folder/revert/$2"_revert.sql
-    Database__file_execute "$revert_file"
+    Mysql__file_execute "$revert_file"
 
     # Updating the database that we haven't ran this
     Database__set_ran_last "$1" 0
@@ -173,7 +173,7 @@ Migrate_handle_multiple_migration() {
 Migrate_handle_single_migration() {
     # Migrating the file
     migration_file="$Migrate_folder/migrate/$2"_migrate.sql
-    Database__file_execute "$migration_file"
+    Mysql__file_execute "$migration_file"
 
     # Updating the database that we've ran this
     Database__set_ran_last "$1" 1

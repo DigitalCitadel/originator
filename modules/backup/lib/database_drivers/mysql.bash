@@ -26,7 +26,7 @@ Database__get_tables() {
         <> '$Database__mysql_migration_table';
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
 }
 
 
@@ -43,6 +43,15 @@ Database__get_most_recent_migration() {
     LIMIT 1
 ____EOF
 
-    echo $(Database__fetch "${sql}")
+    echo $(Mysql__fetch "${sql}")
+}
+
+#################################################
+# Restores a single file
+#
+# @param $1: The file to restore
+#################################################
+Database__restore_file() {
+    Mysql__file_execute $1
 }
 
