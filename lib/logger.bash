@@ -26,7 +26,7 @@ Logger_log() {
     if [ $Logger__has_prefix -eq 1 ]; then
         echo "<< $Logger__prefix >>: $1"
     else
-        echo $1
+        echo "$1"
     fi
 
     # Disabling color (if param is passed)
@@ -55,7 +55,7 @@ Logger__prompt() {
     if [ $Logger__has_prefix -eq 1 ]; then
         echo -n "<< $Logger__prefix >>: $1"
     else
-        echo -n $1
+        echo -n "$1"
     fi
 }
 

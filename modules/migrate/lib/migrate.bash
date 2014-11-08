@@ -310,11 +310,11 @@ Migrate_step_up() {
 Migrate_handle_single_map() {
     # If migration is active
     if [ "$2" -eq 1 ]; then
-        Logger__alert "$1"
+        Logger__alert "> $1"
 
     # Migration is not active
     else
-        Logger__log "$1"
+        Logger__log "  $1"
     fi
 }
 
