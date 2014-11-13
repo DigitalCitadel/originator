@@ -106,6 +106,7 @@ Here's a list of the available commands.
 Running backup by itself will generate a backup of all of the tables in the database (except originators migrations table).
 
 **Example Usage**: `./originator backup`
+**Example Usage**: `./originator backup [folder name]`
 
 ### backup:restore
 
