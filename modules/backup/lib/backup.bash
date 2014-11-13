@@ -5,16 +5,23 @@ Backup_folder="$Originator__config_directory/$Backup__backups_folder"
 
 #################################################
 # Backs up the entire database
+# 
+# @param $1: The folder name of the backup.
+# (optional)
 #################################################
 Backup__index() {
     tables=$(Database__get_tables);
 
     words=( $tables )
     if [ ${#words[@]} -gt 0 ]; then
-
         # Preparing backup directory
-        timestamp=$(date +%s)
-        backup_dir="$Backup_folder/$timestamp"
+        if [[ -z "$1" ]]; then
+        	timestamp=$(date +%s)
+        	backup_dir="./backups/$timestamp"
+      	else
+      		backup_dir="./backups/$1"
+      	fi
+
         mkdir "$backup_dir"
         mkdir "$backup_dir/tables"
         last_migration=$(Database__get_most_recent_migration)

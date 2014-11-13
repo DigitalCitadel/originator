@@ -17,7 +17,7 @@ Originator__autoload "$Originator__module_directory"/lib
 #################################################
 Backup_dispatch() {
     if   [ "$1" = "backup" ]; then
-        Backup__index
+        Backup__index $2
     elif [ "$1" = "backup:restore" ]; then
         Backup__restore $2
     elif [ "$1" = "backup:map" ]; then
