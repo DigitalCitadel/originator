@@ -21,9 +21,9 @@ Migrate__always_update=1
 # time you run a command, and will prompt
 # you for your acknowledgement.
 #
-# This is disabled by default, but is highly
-# recommended to enable if your application
-# is actually in production.
+# This is enabled by default, and is highly
+# recommended to keep it enabled if your
+# application is actually in production.
 #################################################
 Migrate__app_in_production=1
 
