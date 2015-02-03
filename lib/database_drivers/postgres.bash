@@ -19,7 +19,7 @@ Postgres__execute() {
 # @param $1: The statement to be executed
 #################################################
 Postgres__fetch() {
-    result=$(Postgres__execute_raw "$1")
+    result=$(Postgres_fetch_raw "$1")
     stripped_result=${result//|/\ }
     echo $stripped_result
 }

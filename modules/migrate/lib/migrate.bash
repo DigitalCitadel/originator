@@ -309,7 +309,7 @@ Migrate_step_up() {
 #################################################
 Migrate_handle_single_map() {
     # If migration is active
-    if [ "$2" -eq 1 ]; then
+    if [ "$2" = "1"  ] || [ "$2" = "t" ]; then
         Logger__alert "> $1"
 
     # Migration is not active
