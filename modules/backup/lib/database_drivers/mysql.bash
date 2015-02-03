@@ -52,6 +52,7 @@ ____EOF
 # @param $1: The file to restore
 #################################################
 Database__restore_file() {
-    Mysql__file_execute $1
+    command=$(cat "$1")
+    Mysql__execute "$command"
 }
 
