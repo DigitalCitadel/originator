@@ -204,3 +204,14 @@ ____EOF
     echo $(Mysql__fetch "${sql}")
 }
 
+
+#################################################
+# Executes the contents of a file on the db
+#
+# @param $1: The file to execute
+#################################################
+Database__file_execute() {
+    command=$(cat "$1")
+    Mysql__execute "$command"
+}
+
