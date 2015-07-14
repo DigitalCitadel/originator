@@ -52,7 +52,7 @@ ____EOF
 #################################################
 Database__create_migration() {
     read -d '' sql <<____EOF
-    INSERT INTO $Database__mysql_migration_table
+    INSERT INTO $Database__postgres_migration_table
     VALUES (DEFAULT, '$1', FALSE, FALSE);
 ____EOF
 
@@ -64,7 +64,7 @@ ____EOF
 #################################################
 Database__reset_ran_last() {
     read -d '' sql <<____EOF
-        UPDATE $Database__mysql_migration_table
+        UPDATE $Database__postgres_migration_table
         SET ran_last=FALSE;
 ____EOF
 
@@ -80,7 +80,7 @@ ____EOF
 #################################################
 Database__set_ran_last() {
     read -d '' sql <<____EOF
-        UPDATE $Database__mysql_migration_table
+        UPDATE $Database__postgres_migration_table
         SET ran_last='$2'
         WHERE id=$1;
 ____EOF
@@ -97,7 +97,7 @@ ____EOF
 #################################################
 Database__set_active() {
     read -d '' sql <<____EOF
-        UPDATE $Database__mysql_migration_table
+        UPDATE $Database__postgres_migration_table
         SET active='$2'
         WHERE id=$1;
 ____EOF
@@ -111,7 +111,7 @@ ____EOF
 Database__get_last_ran() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
+    FROM $Database__postgres_migration_table
     WHERE ran_last='1'
     ORDER BY name DESC;
 ____EOF
@@ -126,7 +126,7 @@ ____EOF
 Database__get_map_data() {
     read -d '' sql <<____EOF
     SELECT name, active
-    FROM $Database__mysql_migration_table
+    FROM $Database__postgres_migration_table
     ORDER BY name ASC;
 ____EOF
 
@@ -139,7 +139,7 @@ ____EOF
 Database__get_outstanding_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
+    FROM $Database__postgres_migration_table
     WHERE active='0'
     ORDER BY name ASC;
 ____EOF
@@ -155,7 +155,7 @@ ____EOF
 Database__get_step_down_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
+    FROM $Database__postgres_migration_table
     WHERE active='1'
     ORDER BY name DESC
     LIMIT $1;
@@ -172,7 +172,7 @@ ____EOF
 Database__get_step_up_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
+    FROM $Database__postgres_migration_table
     WHERE active='0'
     ORDER BY name ASC
     LIMIT $1;
@@ -187,7 +187,7 @@ ____EOF
 Database__get_active_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
+    FROM $Database__postgres_migration_table
     WHERE active='1'
     ORDER BY name DESC;
 ____EOF
@@ -203,7 +203,7 @@ ____EOF
 Database__get_migration_from_name() {
     read -d '' sql <<____EOF
     SELECT *
-    FROM $Database__mysql_migration_table
+    FROM $Database__postgres_migration_table
     WHERE name='$1';
 ____EOF
 
