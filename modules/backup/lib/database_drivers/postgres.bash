@@ -25,7 +25,8 @@ Database__get_tables() {
     SELECT table_name
     FROM information_schema.tables
     WHERE table_type = 'BASE TABLE'
-        AND table_schema = 'public';
+        AND table_schema = 'public'
+        AND table_name != '$Database__postgres_migration_table';
 ____EOF
 
     echo $(Postgres__fetch "${sql}")
