@@ -62,6 +62,7 @@ Mysql__generate_config() {
     echo "user = $Database__mysql_user" >> "$Mysql__config_file"
     echo "password = $Database__mysql_pass" >> "$Mysql__config_file"
     echo "host = $Database__mysql_host" >> "$Mysql__config_file"
+    echo "port = $Database__mysql_port" >> "$Mysql__config_file"
 }
 
 #################################################
