@@ -4,8 +4,15 @@
 # Check if a database table exists
 #################################################
 Database__table_exists() {
-    var=$(Mysql__execute "SHOW TABLES LIKE '$Database__mysql_migration_table'")
-    if [ "$var" = "" ]; then
+    read -d '' sql <<____EOF
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
+        AND table_name = '$Database__postgres_migration_table';
+____EOF
+
+    tables=$(Postgres__fetch "${sql}")
+    if [ "$tables" = "" ]; then
         echo 0
     else
         echo 1
@@ -17,26 +24,25 @@ Database__table_exists() {
 # migrations.
 #################################################
 Database__migration_table() {
-    echo "$Database__mysql_migration_table"
+    echo "$Database__postgres_migration_table"
 }
 
 #################################################
 # Creates the table to track migrations
 #################################################
 Database__create_migrations_table() {
+    primary_key="$Database__postgres_migration_table"_pk
     read -d '' sql <<____EOF
-    CREATE TABLE $Database__mysql_migration_table
-    (
-        id BIGINT NOT NULL AUTO_INCREMENT,
-            PRIMARY KEY (id),
+    CREATE TABLE $Database__postgres_migration_table (
+        id BIGSERIAL,
         name VARCHAR(255) NULL,
         ran_last BOOLEAN NULL,
-        active BOOLEAN NULL
-    )
-    ENGINE=InnoDB;
+        active BOOLEAN NULL,
+        CONSTRAINT $primary_key PRIMARY KEY (id)
+    );
 ____EOF
 
-    Mysql__execute "${sql}"
+    Postgres__execute "${sql}"
 }
 
 #################################################
@@ -46,11 +52,11 @@ ____EOF
 #################################################
 Database__create_migration() {
     read -d '' sql <<____EOF
-    INSERT INTO $Database__mysql_migration_table
-    VALUES (DEFAULT, "$1", FALSE, FALSE);
+    INSERT INTO $Database__postgres_migration_table
+    VALUES (DEFAULT, '$1', FALSE, FALSE);
 ____EOF
 
-    Mysql__execute "${sql}"
+    Postgres__execute "${sql}"
 }
 
 #################################################
@@ -58,11 +64,11 @@ ____EOF
 #################################################
 Database__reset_ran_last() {
     read -d '' sql <<____EOF
-        UPDATE $Database__mysql_migration_table
-        SET ran_last=0;
+        UPDATE $Database__postgres_migration_table
+        SET ran_last=FALSE;
 ____EOF
 
-    Mysql__execute "${sql}"
+    Postgres__execute "${sql}"
 }
 
 #################################################
@@ -74,12 +80,12 @@ ____EOF
 #################################################
 Database__set_ran_last() {
     read -d '' sql <<____EOF
-        UPDATE $Database__mysql_migration_table
-        SET ran_last=$2
+        UPDATE $Database__postgres_migration_table
+        SET ran_last='$2'
         WHERE id=$1;
 ____EOF
 
-    Mysql__execute "${sql}"
+    Postgres__execute "${sql}"
 }
 
 #################################################
@@ -91,12 +97,12 @@ ____EOF
 #################################################
 Database__set_active() {
     read -d '' sql <<____EOF
-        UPDATE $Database__mysql_migration_table
-        SET active=$2
+        UPDATE $Database__postgres_migration_table
+        SET active='$2'
         WHERE id=$1;
 ____EOF
 
-    Mysql__execute "${sql}"
+    Postgres__execute "${sql}"
 }
 
 #################################################
@@ -105,12 +111,12 @@ ____EOF
 Database__get_last_ran() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
-    WHERE ran_last=1
+    FROM $Database__postgres_migration_table
+    WHERE ran_last='1'
     ORDER BY name DESC;
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
 
 
@@ -120,11 +126,11 @@ ____EOF
 Database__get_map_data() {
     read -d '' sql <<____EOF
     SELECT name, active
-    FROM $Database__mysql_migration_table
+    FROM $Database__postgres_migration_table
     ORDER BY name ASC;
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
 
 #################################################
@@ -133,12 +139,12 @@ ____EOF
 Database__get_outstanding_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
-    WHERE active=0
+    FROM $Database__postgres_migration_table
+    WHERE active='0'
     ORDER BY name ASC;
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
 
 #################################################
@@ -149,13 +155,13 @@ ____EOF
 Database__get_step_down_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
-    WHERE active=1
+    FROM $Database__postgres_migration_table
+    WHERE active='1'
     ORDER BY name DESC
-    LIMIT $1
+    LIMIT $1;
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
 
 #################################################
@@ -166,13 +172,13 @@ ____EOF
 Database__get_step_up_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
-    WHERE active=0
+    FROM $Database__postgres_migration_table
+    WHERE active='0'
     ORDER BY name ASC
-    LIMIT $1
+    LIMIT $1;
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
 
 #################################################
@@ -181,12 +187,12 @@ ____EOF
 Database__get_active_migrations() {
     read -d '' sql <<____EOF
     SELECT id, name
-    FROM $Database__mysql_migration_table
-    WHERE active=1
+    FROM $Database__postgres_migration_table
+    WHERE active='1'
     ORDER BY name DESC;
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
 
 #################################################
@@ -197,13 +203,12 @@ ____EOF
 Database__get_migration_from_name() {
     read -d '' sql <<____EOF
     SELECT *
-    FROM $Database__mysql_migration_table
-    WHERE name="$1";
+    FROM $Database__postgres_migration_table
+    WHERE name='$1';
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
-
 
 #################################################
 # Executes the contents of a file on the db
@@ -212,6 +217,6 @@ ____EOF
 #################################################
 Database__file_execute() {
     command=$(cat "$1")
-    Mysql__execute "$command"
+    Postgres__execute "$command"
 }
 

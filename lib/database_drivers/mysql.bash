@@ -4,18 +4,6 @@
 Mysql__config_file="$Originator__config_directory/mysql_config.cnf"
 
 #################################################
-# Executes a sql file
-#
-# @param $1: the sql file to be executed
-#################################################
-Mysql__file_execute() {
-    "$Database__mysql_path" \
-        --defaults-extra-file="$Mysql__config_file" \
-        --database="$Database__mysql_database" \
-        < "$1"
-}
-
-#################################################
 # Executes a database statement
 #
 # @param $1: the statement to be executed

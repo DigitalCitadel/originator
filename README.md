@@ -4,7 +4,7 @@ originator is a framework independent CLI for managing databases.
 
 # Why should you care?
 
-There are no dependencies for this beyond MySQL (PostgreSQL is next on the list), so you can use this with any type of application.
+There are no dependencies for this beyond MySQL or PostgreSQL, so you can use this with any type of application.
 
 This CLI is based heavily off of Laravel's Artisan, but adds a few much needed commands.
 
@@ -134,12 +134,5 @@ Handling this is really simple with originator.
 
 In the base directory, create a new directory with this command `mkdir config/$(hostname)`.  All of the files in this directory are autoloaded after all of the global config files are loaded.  This allows us to override config values to tweak them appropriately for this environment.  These folders are also in the `.gitignore` file, so you don't have to worry about cluttering your repo with environment specifics.
 
-# The Future
-
-As mentioned, originator is in early development.  There are plans to soon support PostgreSQL.
-
-There will also soon be a database backup component that will make creating / restoring backups relatively effortless.
-
 # License & Contributing
 originator is licensed under [MIT](license.md)
-

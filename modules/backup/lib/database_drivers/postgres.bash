@@ -7,11 +7,13 @@
 # @param $2: The file to write it to
 #################################################
 Database__backup_table() {
-    mysqldump \
-            --defaults-extra-file="$Mysql__config_file" \
-            --no-create-info \
-            $Database__mysql_database \
-            $1 > $2
+    pg_dump \
+        --column-inserts \
+        --data-only \
+        --username "$Database__postgres_user" \
+        --host "$Database__postgres_host" \
+        --table="$1" \
+        "$Database__postgres_database" > "$2"
 }
 
 #################################################
@@ -20,15 +22,15 @@ Database__backup_table() {
 #################################################
 Database__get_tables() {
     read -d '' sql <<____EOF
-    SHOW tables
-    FROM $Database__mysql_database
-    WHERE Tables_in_$Database__mysql_database
-        <> '$Database__mysql_migration_table';
+    SELECT table_name
+    FROM information_schema.tables
+    WHERE table_type = 'BASE TABLE'
+        AND table_schema = 'public'
+        AND table_name != '$Database__postgres_migration_table';
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
-
 
 #################################################
 # Gets the most recent migration that has been
@@ -37,13 +39,13 @@ ____EOF
 Database__get_most_recent_migration() {
     read -d '' sql <<____EOF
     SELECT name
-    FROM $Database__mysql_migration_table
-    WHERE active=1
+    FROM $Database__postgres_migration_table
+    WHERE active='t'
     ORDER BY name DESC
     LIMIT 1
 ____EOF
 
-    echo $(Mysql__fetch "${sql}")
+    echo $(Postgres__fetch "${sql}")
 }
 
 #################################################
@@ -53,6 +55,5 @@ ____EOF
 #################################################
 Database__restore_file() {
     command=$(cat "$1")
-    Mysql__execute "$command"
+    Postgres__execute "$command"
 }
-
