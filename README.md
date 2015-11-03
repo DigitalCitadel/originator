@@ -38,13 +38,13 @@ This function will create two files; one named something like `migrations/migrat
 
 In the migrate file, you should create your migration.  In the revert file it should do the opposite of the migrate file.  For example, if you create a table in the migrate file, you should drop the table in the revert file.
 
-**Example Usage**: `./originator migrate:make my_first_migration`
+**Example Usage**: `originator migrate:make my_first_migration`
 
 ### migrate
 
 Migrate by itself will run all outstanding migrations.
 
-**Example Usage**: `./originator migrate`
+**Example Usage**: `originator migrate`
 
 ### migrate:update
 
@@ -52,37 +52,39 @@ Update will run through all of the migration files and ensure that they're being
 
 By default, this operation is ran before any command is executed.  You can disable this in the `migrate_config.bash` file, although it's likely you'll want to keep it enabled if you're working in a team.
 
-**Example Usage**: `./originator migrate:update`
+**Example Usage**: `originator migrate:update`
 
 ### migrate:rollback
 
 Rollback will revert the last batch of migrations that were ran.  This is useful in combination with the `migrate` command when tweaking migrations.
 
-**Example Usage**: `./originator migrate:rollback`
+**Example Usage**: `originator migrate:rollback`
 
 ### migrate:reset
 
 Reset will revert all migrations.
 
-**Example Usage**: `./originator migrate:reset`
+**Example Usage**: `originator migrate:reset`
 
 ### migrate:refresh
 
 Refresh will revert all migrations, and then run them again.
 
-**Example Usage**: `./originator migrate:refresh`
+**Example Usage**: `originator migrate:refresh`
 
 ### migrate:map
 
 Map will display the current status of all of your migrations.  Migrations that are active will be bold, migrations that are not active will not.  This is useful so you don't have to dig into your database to see what migrations have been ran.
 
-**Example Usage**: `./originator migrate:map`
+**Example Usage**: `originator migrate:map`
 
 **Example Output**:
 
-**1407544303_create_foo_table**
-**1407544485_create_bar_table**
+```
+> 1407544303_create_foo_table
+> 1407544485_create_bar_table
 1407544548_create_baz_table
+```
 
 ### migrate:step
 
@@ -92,8 +94,8 @@ This command in conjunction with `migrate:map` can prevent you from a lot of dig
 
 **Example Usage**:
 
-To migrate: `./originator migrate:step +2`
-To revert:  `./originator migrate:step -3`
+To migrate: `originator migrate:step +2`
+To revert:  `originator migrate:step -3`
 
 ## Backup Module
 
@@ -105,19 +107,19 @@ Here's a list of the available commands.
 
 Running backup by itself will generate a backup of all of the tables in the database (except originators migrations table).
 
-**Example Usage**: `./originator backup` or `./originator backup [folder name]`
+**Example Usage**: `originator backup` or `originator backup [folder name]`
 
 ### backup:restore
 
 Restore will restore a specific backup given a timestamp.
 
-**Example Usage**: `./originator backup:restore 1411162872`
+**Example Usage**: `originator backup:restore 1411162872`
 
 ### backup:map
 
 Map will display a list of available backups with their associated last migration.
 
-**Example Usage**: `./originator backup:map`
+**Example Usage**: `originator backup:map`
 
 **Example Output**:
 
